@@ -1,5 +1,6 @@
 # read data
 data <- read.table(file.choose(), sep = ",", header = TRUE)
 
-# attach data
-attach(data)
+columnNames <- data[0,]
+
+selData <- data[,1:30]
