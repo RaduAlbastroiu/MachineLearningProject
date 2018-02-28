@@ -5,7 +5,7 @@ correlationMatrix <- data.frame(ColumnNr = 3:30, Value = cor(data[,3:30], data[,
 correlationMatrix <- correlationMatrix[order(abs(correlationMatrix$Value), decreasing = TRUE),]
 
 # create a matrix with the chosen columns by the correlation
-mylist <- list() 
+correlatedCols <- list() 
 
 for (i in 1:20) {
   vec <- numeric(20) 
@@ -19,8 +19,8 @@ for (i in 1:20) {
   }
   
   # add vector to matrix
-  mylist[[i]] <- vec
+  correlatedCols[[i]] <- vec
 }
 
 # make dataframe from matrix
-df <- do.call("rbind",mylist)
+df <- do.call("rbind", correlatedCols)
