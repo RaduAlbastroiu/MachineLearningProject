@@ -11,4 +11,3 @@ step(FitAll, direction = "backward")
 
 #stepwise regression
 step(FitStart, direction = "both", scope = formula(FitAll))
-
