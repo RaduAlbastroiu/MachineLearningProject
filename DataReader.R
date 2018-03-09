@@ -1,6 +1,6 @@
 # read data
-data <- read.table(file.choose(), sep = ",", header = TRUE)
+primary.data <- read.table(file.choose(), sep = ",", header = TRUE)
 
-columnNames <- colnames(data)
-
-selData <- data[,1:30]
+# don't touch resources
+data <- primary.data
+column.names <- colnames(data)
