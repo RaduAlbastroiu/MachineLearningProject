@@ -1,3 +1,5 @@
+# Data reader
+
 # read data
 primary.data <- read.table(file.choose(), sep = ",", header = TRUE)
 
