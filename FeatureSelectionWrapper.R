@@ -77,7 +77,11 @@ for(i in 1:length(datasets.list)) {
 
 
 # remove residual variables
-rm(forward, forwardResult)
-rm(backward, backwardResult)
-rm(stepwise, stepwiseResult)
+rm(i,j)
+rm(forward)
+rm(backward)
+rm(stepwise)
 rm(FitAll, FitStart)
+rm(dataset, datasets)
+rm(simple.list)
+rm(extractFeatures)

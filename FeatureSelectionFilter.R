@@ -1,3 +1,5 @@
+# Feature Selection Filter
+
 # matrix with the corresponding Pearson Correlation values
 correlationMatrix <- data.frame(ColumnNr = 3:30, Value = cor(data[,3:30], data[,2]))
 
@@ -21,5 +23,7 @@ for (i in 1:num.features) {
 }
 
 # remove residual variables
+rm(vec)
+rm(correlationMatrix)
 rm(num.features, i, j)
 
