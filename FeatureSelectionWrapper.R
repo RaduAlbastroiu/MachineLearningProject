@@ -20,9 +20,6 @@ for(colName in forwardResult) {
   }
   j <- j + 1
 }
-rm(forward)
-rm(forwardResult)
-
 
 # backward elimination
 backward <- step(FitAll, direction = "backward")
@@ -41,8 +38,6 @@ for(colName in backwardResult) {
   }
   j <- j + 1
 }
-rm(backward)
-rm(backwardResult)
 
 # stepwise regression
 stepwise <- step(FitStart, direction = "both", scope = formula(FitAll))
@@ -61,8 +56,8 @@ for(colName in stepwiseResult) {
   }
   j <- j + 1
 }
-rm(stepwise)
-rm(stepwiseResult)
 
-rm(FitAll)
-rm(FitStart)
+rm(forward, forwardResult)
+rm(backward, backwardResult)
+rm(stepwise, stepwiseResult)
+rm(FitAll, FitStart)
