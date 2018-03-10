@@ -97,3 +97,5 @@ scaled.undersampled.datasets <- scaleDatasets(undersampled.datasets)
 normalized.hybrid.datasets <- normalizeDatasets(hybrid.datasets)
 scaled.hybrid.datasets <- scaleDatasets(hybrid.datasets)
 
+# remove residual variables
+rm(normalizeData, scaleData, normalizeDatasets, scaleDatasets)
