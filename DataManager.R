@@ -8,6 +8,8 @@ source('DataProcessing.R')
 # normalize and scale data
 source('DataNormalization.R')
 
+# data spliter
+source('DataSplitter.R')
 
 # put all data in one list
 datasets.list <- list()
