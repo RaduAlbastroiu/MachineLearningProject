@@ -9,5 +9,8 @@ source('FeatureSelectionFilter.R')
 # wrapper methods
 source('FeatureSelectionWrapper.R')
 
+# embedded methods
+source('FeatureSelectionEmbedded.R')
+
 # keep unique elements only
 feature.selection.list <- unique(feature.selection.list)
