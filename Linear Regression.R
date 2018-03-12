@@ -53,7 +53,7 @@ trainModelAndGetAccKfoldsSplit = function(data, form, k) {
   R2.vec <- vector()
   MSE.vec <- vector()
   
-  for(i in 1:length(temp.lists)) {
+  for(i in 1:k) {
     
     oneFold <- folds[[i]]
     
