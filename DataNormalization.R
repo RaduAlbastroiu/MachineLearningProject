@@ -75,6 +75,10 @@ scaleDatasets = function(datasets) {
   return(scaled.datasets)
 }
 
+# unscale a dataset
+unscaleData =  function(scaled.data, unscaled.data) {
+  
+}
 
 # data normalization
 

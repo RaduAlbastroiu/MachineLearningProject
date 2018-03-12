@@ -14,7 +14,7 @@ hybrid.datasets <- list()
 simple.data <- data
 
 # number of datasets for each method
-num.datasets <- 5
+num.datasets <- 3
 
 # number of elements from each category
 num.low.stress <- nrow(data[data$C1Stress == 'lowStress',])
