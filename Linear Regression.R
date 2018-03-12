@@ -141,9 +141,11 @@ trainPredictOnFeatures = function(data, num.runs, k, first.index, second.index) 
       prediction.MSE.kfolds.split[j] <- Kfolds.split[2]
       
       meanPred <- (prediction.R2.simple.split[j] + prediction.R2.kfolds.split[j]) / 2
-      if(meanPred > best.prediction) {
-        best.prediction <- meanPred
-        best.formula <- f
+      if(is.na(meanPred) == FALSE & is.na(best.prediction) == FALSE) {
+        if(meanPred > best.prediction) {
+          best.prediction <- meanPred
+          best.formula <- f
+        }
       }
     }
   }
@@ -200,7 +202,7 @@ for(i in 2:length(datasets.list)) {
     
     # progressometer
     curr.num.data <- curr.num.data + 1
-    cat("Linear Regression: Dataset list =", 1, "  dataset =", 3, " -> ", round((curr.num.data/num.datasets)*100, 2), "%\n")
+    cat("Linear Regression: Dataset list =", i, "  dataset =", j, " -> ", round((curr.num.data/num.datasets)*100, 2), "%\n")
     
     # train on dataset
     dataset <- datasets[[j]]
