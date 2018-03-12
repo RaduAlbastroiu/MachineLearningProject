@@ -19,32 +19,32 @@ datasetsNames = function(first.index, second.index) {
     if(first.index == 2)
       return('oversampled data')
     if(first.index == 3)
-      return('normalized oversampled data')
-    if(first.index == 4)
-      return('scaled oversampled data')
-    
-    if(first.index == 5)
       return('undersampled data')
-    if(first.index == 6)
-      return('normalized undersampled data')
-    if(first.index == 7)
-      return('scaled undersampled data')
-    
-    if(first.index == 8)
+    if(first.index == 4)
       return('hybrid data')
-    if(first.index == 9)
-      return('normalized hybrid data')
-    if(first.index == 10)
-      return('scaled hybrid data')
+    
+    #if(first.index == 5)
+    #  return('undersampled data')
+    #if(first.index == 6)
+    #  return('normalized undersampled data')
+    #if(first.index == 7)
+    #  return('scaled undersampled data')
+    
+    #if(first.index == 8)
+    #  return('hybrid data')
+    #if(first.index == 9)
+    #  return('normalized hybrid data')
+    #if(first.index == 10)
+    #  return('scaled hybrid data')
   }
   else
   {
     if(second.index == 1)
       return('simple data')
-    if(second.index == 2)
-      return('normalized simple data')
-    if(second.index == 3)
-      return('scaled simple data')
+    #if(second.index == 2)
+    #  return('normalized simple data')
+    #if(second.index == 3)
+    #  return('scaled simple data')
   }
 }
 

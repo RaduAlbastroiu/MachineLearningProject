@@ -170,22 +170,23 @@ colnames(Linear.Regression.df) <- c("Dataset", "Avg.pred.data.split", "Avg.pred.
 
 # Add first 3 elements by hand, don't ask
 # simple data
+curr.num.data <- 1
 cat("Linear Regression: Dataset list =", 1, "  dataset =", 1, " -> ", round((curr.num.data/num.datasets)*100, 2), "%\n")
-curr.num.data <- 2
 prediction.simple.data <- trainPredictOnFeatures(simple.data, num.runs, k, 1, 1)
 Linear.Regression.df <- rbind(Linear.Regression.df, prediction.simple.data)
 Linear.Regression.df$Formula <- as.character(Linear.Regression.df$Formula)
 
 # normalized simple data
-cat("Linear Regression: Dataset list =", 1, "  dataset =", 2, " -> ", round((curr.num.data/num.datasets)*100, 2), "%\n")
-curr.num.data <- 3
-prediction.normalized.simple.data <- trainPredictOnFeatures(normalized.simple.data, num.runs, k, 1, 2)
-Linear.Regression.df <- rbind(Linear.Regression.df, prediction.normalized.simple.data)
+#curr.num.data <- 2
+#cat("Linear Regression: Dataset list =", 1, "  dataset =", 2, " -> ", round((curr.num.data/num.datasets)*100, 2), "%\n")
+#prediction.normalized.simple.data <- trainPredictOnFeatures(normalized.simple.data, num.runs, k, 1, 2)
+#Linear.Regression.df <- rbind(Linear.Regression.df, prediction.normalized.simple.data)
 
 # scaled simple data
-cat("Linear Regression: Dataset list =", 1, "  dataset =", 3, " -> ", round((curr.num.data/num.datasets)*100, 2), "%\n")
-prediction.scaled.simple.data <- trainPredictOnFeatures(scaled.simple.data, num.runs, k, 1, 3)
-Linear.Regression.df <- rbind(Linear.Regression.df, prediction.scaled.simple.data)
+#curr.num.data <- 3
+#cat("Linear Regression: Dataset list =", 1, "  dataset =", 3, " -> ", round((curr.num.data/num.datasets)*100, 2), "%\n")
+#prediction.scaled.simple.data <- trainPredictOnFeatures(scaled.simple.data, num.runs, k, 1, 3)
+#Linear.Regression.df <- rbind(Linear.Regression.df, prediction.scaled.simple.data)
 
 
 # for in list of datasets
