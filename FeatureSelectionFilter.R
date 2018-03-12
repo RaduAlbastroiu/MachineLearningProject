@@ -1,5 +1,8 @@
 # Feature Selection Filter
 
+# progress
+cat("Feature Selection Filter \n")
+
 # matrix with the corresponding Pearson Correlation values
 correlationMatrix <- data.frame(ColumnNr = 3:30, Value = cor(data[,3:30], data[,2]))
 

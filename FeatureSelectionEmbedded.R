@@ -82,8 +82,11 @@ featureSelLogRegression = function(data, num.features) {
 
 
 # run both methods of feature selection on all datasets
-num.iterations <- 20
+num.iterations <- 15
 for(i in 1:length(datasets.list)) {
+  
+  # progress
+  cat("Feature Selection Embedded run number", i, " -> ", round((i/num.datasets)*100, 2), "%\n")
   
   datasets <- datasets.list[[i]]
   
@@ -92,7 +95,7 @@ for(i in 1:length(datasets.list)) {
 
     dataset <- datasets[[j]]
 
-    for (iter in 1:num.iterations) {
+    for (iter in 3:num.iterations) {
       
       # retrieve features sorted by random forest
       rand.forest.features <- featureSelRandomForest(dataset, iter)

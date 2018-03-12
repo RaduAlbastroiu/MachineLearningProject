@@ -1,5 +1,8 @@
 # Wrapper Feature Selection
 
+# progress
+cat("Feature Selection Wrapper \n")
+
 # method
 extractFeatures = function(stepwise) {
   result <- colnames(stepwise$model)
