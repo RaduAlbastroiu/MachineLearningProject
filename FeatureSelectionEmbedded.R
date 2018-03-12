@@ -86,7 +86,7 @@ num.iterations <- 15
 for(i in 1:length(datasets.list)) {
   
   # progress
-  cat("Feature Selection Embedded run number", i, " -> ", round((i/num.datasets)*100, 2), "%\n")
+  cat("Feature Selection Embedded run number", i, " -> ", round((i/length(datasets.list))*100,2), "%\n")
   
   datasets <- datasets.list[[i]]
   
