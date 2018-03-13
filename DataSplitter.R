@@ -35,7 +35,7 @@ dataSplit = function(data, predicted.column, split.ratio) {
 # returns a list with k folds
 # each fold is a list with 2 elements
 # first is train and second is test
-kFoldSplit= function(data, k) {
+kFoldSplit = function(data, k) {
   vec <- vector()
   kfold.list <- list()
   
