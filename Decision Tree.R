@@ -1,62 +1,47 @@
-# Logistic Regression
+# Decision Tree 
 
 # load necessary libs
 library(caret)
-library(VGAM)
 library(dplyr)
+library(rpart)
+library(rpart.plot)
 
-# Trains a model using simple data split and returns its accuracy
+
+# Trains a model using simple split and returns its accuracy/MCE
 # returns a vec where first is accuracy and second is MCE
-logRegressionSimpleSplit = function(data, form, split.ratio) {
+decisionTreeSimpleSplit = function(data, form, split.ratio) {
   
-  #remove the other class
-  data <- select(data, -C2Stress, -PSS_Score)
+  data <- select(data, -PSS_Score, -C2Stress)
   
   # split data
   temp.list <- dataSplit(data, data$C1Stress, split.ratio)
   train.data <- temp.list[[1]]
   test.data <- temp.list[[2]]
   
-  # train a model
-  model <- vglm(form, family = propodds, data = train.data)
+  # build tree
+  tree <- rpart(C1Stress~ ., method = 'class', data = train.data)
   
-  # predict 
-  predictions <- predict(model, type = 'response', test.data)
- 
-  if(any(is.na(predictions)) == TRUE)
-    print(TRUE)
-  
-  fitted.result <- vector()
-  for(i in 1:nrow(predictions)) {
-    if(predictions[i,1] >= predictions[i,2] & predictions[i,1] >= predictions[i,3])
-      fitted.result[i] <- colnames(predictions)[1]
-    else if(predictions[i,2] >= predictions[i,1] & predictions[i,2] >= predictions[i,3])
-      fitted.result[i] <- colnames(predictions)[2]
-    else if(predictions[i,3] >= predictions[i,1] & predictions[i,3] >= predictions[i,2])
-      fitted.result[i] <- colnames(predictions)[3]
-  }
-  
-  fitted.result <- as.factor(fitted.result)
-  levels(fitted.result) <- c('lowStress', 'moderateStress', 'highStress')
+  # predict
+  predictions <- predict(tree, type = "class", test.data)
 
-  # compute error and accuracy
-  missclassification.error <- mean(fitted.result != test.data$C1Stress)
+  # compute accuracy
+  missclassification.error <- mean(predictions != test.data$C1Stress)
   accuracy = 1 - missclassification.error
   
-  # creating the result
+  # return accuracy and misclassification error
   result <- vector()
   result[1] <- accuracy
   result[2] <- missclassification.error
-  print(result)
+  
   return(result)
 }
 
-# Trains a model using k folds split and returns its accuracy
+
+# Trains a model using k folds split and returns its accuracy/MCE
 # returns a vec where first is accuracy and second is MCE
-logRegressionKFoldsSplit = function(data, form, k) {
-  
-  #remove the other class
-  data <- select(data, -C2Stress, -PSS_Score)
+decisionTreeKFoldsSplit = function(data, form, split.ratio) {
+
+  data <- select(data, -PSS_Score, -C2Stress)
   
   # split data
   folds <- kFoldSplit(data, k)
@@ -72,30 +57,14 @@ logRegressionKFoldsSplit = function(data, form, k) {
     train.data <- oneFold[[1]]
     test.data <- oneFold[[2]]
     
-    # train a model
-    model <- vglm(form, family = propodds, data = train.data)
+    # build tree
+    tree <- rpart(C1Stress~ ., method = 'class', data = train.data)
+  
+    # predict
+    predictions <- predict(tree, type = "class", test.data)
     
-    # predict 
-    predictions <- predict(model, test.data,  type = 'response')
-    
-    if(any(is.na(predictions)) == TRUE)
-      print(TRUE)
-    
-    fitted.result <- vector()
-    for(i in 1:nrow(predictions)) {
-      if(predictions[i,1] >= predictions[i,2] & predictions[i,1] >= predictions[i,3])
-        fitted.result[i] <- colnames(predictions)[1]
-      else if(predictions[i,2] >= predictions[i,1] & predictions[i,2] >= predictions[i,3])
-        fitted.result[i] <- colnames(predictions)[2]
-      else if(predictions[i,3] >= predictions[i,1] & predictions[i,3] >= predictions[i,2])
-        fitted.result[i] <- colnames(predictions)[3]
-    }
-    
-    fitted.result <- as.factor(fitted.result)
-    levels(fitted.result) <- c('lowStress', 'moderateStress', 'highStress')
-    
-    # compute error and accuracy
-    missclassification.error <- mean(fitted.result != test.data$C1Stress)
+    # compute accuracy
+    missclassification.error <- mean(predictions != test.data$C1Stress)
     accuracy = 1 - missclassification.error
     
     # add in results vectors
@@ -103,10 +72,14 @@ logRegressionKFoldsSplit = function(data, form, k) {
     MCE.vec[length(MCE.vec) + 1] <- missclassification.error
   }
   
+  ACC.vec <- ACC.vec[!is.na(ACC.vec)]
+  MCE.vec <- MCE.vec[!is.na(MCE.vec)]
+  
+  # return the average accuracy and misclassification error for all folds
   result <- vector()
   result[1] <- mean(ACC.vec)
   result[2] <- mean(MCE.vec)
-  print(result)
+  
   return(result)
 }
 
@@ -119,7 +92,7 @@ logRegressionKFoldsSplit = function(data, form, k) {
 # - avg missclassification error for simple data split
 # - avg missclassification error for k folds split
 # - best formula as character
-logRegression = function(data, num.runs, k, first.index, second.index) {
+decisionTree = function(data, num.runs, k, first.index, second.index) {
   
   # store all results
   prediction.ACC.simple.split <- vector()
@@ -131,10 +104,11 @@ logRegression = function(data, num.runs, k, first.index, second.index) {
   best.formula <- vector()
   
   for(i in 1:length(feature.selection.list)) {
-    
+  
+    cat("feature no. ", i, "\n")
     # formula for this combination of features
     f <- as.formula(paste("C1Stress ~", paste(column.names[feature.selection.list[[i]]][!column.names[feature.selection.list[[i]]] %in% "C1Stress"], collapse = " + ")))
-    
+  
     # for each run
     for(j in 1:num.runs) {
       
@@ -144,7 +118,7 @@ logRegression = function(data, num.runs, k, first.index, second.index) {
       
       # run simple split as many times as k
       for(z in 1:k) {
-        res <- logRegressionSimpleSplit(data, f, 0.7)
+        res <- decisionTreeSimpleSplit(data, f, 0.7)
         
         ACC.vec[length(ACC.vec) + 1] <- res[1]
         MCE.vec[length(MCE.vec) + 1] <- res[2]
@@ -158,7 +132,7 @@ logRegression = function(data, num.runs, k, first.index, second.index) {
       prediction.MCE.simple.split[j] <- mean(MCE.vec)
       
       # run k folds
-      Kfolds.split <- logRegressionKFoldsSplit(data, f, k)
+      Kfolds.split <- decisionTreeKFoldsSplit(data, f, k)
       prediction.ACC.kfolds.split[j] <- Kfolds.split[1]
       prediction.MCE.kfolds.split[j] <- Kfolds.split[2]
       
@@ -179,46 +153,54 @@ logRegression = function(data, num.runs, k, first.index, second.index) {
   return(result.df)
 }
 
+
+
 #parameters
 k <- 5
 num.runs <- 3
-
 curr.num.data <- 1
 
-# create logistic regression data frame
-Logistic.Regression.df <- data.frame(matrix(ncol = 6, nrow = 0))
-colnames(Logistic.Regression.df) <- c("Dataset", "Avg.acc.data.split", "Avg.acc.kfolds", "Avg.mce.data.split", "Avg.mce.kfolds", "Formula")
+# create decision tree data frame
+Decision.Tree.df <- data.frame(matrix(ncol = 6, nrow = 0))
+colnames(Decision.Tree.df) <- c("Dataset", 
+                                "Avg.acc.data.split", 
+                                "Avg.acc.kfolds", 
+                                "Avg.mce.data.split", 
+                                "Avg.mce.kfolds", 
+                                "Formula")
 
 
 # simple data
 curr.num.data <- 1
-cat("Logistic Regression: Dataset list =", 1, "  dataset =", 1, " -> ", round((curr.num.data/num.datasets)*100, 2), "%\n")
-prediction.simple.data <- logRegression(simple.data, num.runs, k, 1, 1)
-Logistic.Regression.df <- rbind(Logistic.Regression.df, prediction.simple.data)
-Logistic.Regression.df$Formula <- as.character(Logistic.Regression.df$Formula)
+cat("Decision Tree: Dataset list =", 1, "  dataset =", 1, " -> ", round((curr.num.data/num.datasets)*100, 2), "%\n")
+prediction.simple.data <- decisionTree(simple.data, num.runs, k, 1, 1)
+Decision.Tree.df <- rbind(Decision.Tree.df, prediction.simple.data)
+Decision.Tree.df$Formula <- as.character(Decision.Tree.df$Formula)
 
 # for in list of datasets
 for(i in 2:length(datasets.list)) {
-  
-  if(i == 3)
-    break
   
   datasets <- datasets.list[[i]]
   
   # result
   result.df <- data.frame(matrix(ncol = 6, nrow = 0))
-  colnames(result.df) <- c("Dataset", "Avg.acc.data.split", "Avg.acc.kfolds", "Avg.mce.data.split", "Avg.mce.kfolds", "Formula")
+  colnames(result.df) <- c("Dataset", 
+                           "Avg.acc.data.split", 
+                           "Avg.acc.kfolds",
+                           "Avg.mce.data.split",
+                           "Avg.mce.kfolds",
+                           "Formula")
   
   # for each dataset train and keep results
   for(j in 1:length(datasets)) {
     
     # progressometer
     curr.num.data <- curr.num.data + 1
-    cat("Logistic Regression: Dataset list =", i, "  dataset =", j, " -> ", round((curr.num.data/num.datasets)*100, 2), "%\n")
+    cat("Decision Tree: Dataset list =", i, "  dataset =", j, " -> ", round((curr.num.data/num.datasets)*100, 2), "%\n")
     
     # train on dataset
     dataset <- datasets[[j]]
-    result.df <- rbind(result.df, logRegression(dataset, num.runs, k, i, j))
+    result.df <- rbind(result.df, decisionTree(dataset, num.runs, k, i, j))
   }
   
   # compute average on column
@@ -229,8 +211,9 @@ for(i in 2:length(datasets.list)) {
   result.df$Formula <- rle(sort(result.df$Formula, decreasing = TRUE))[[2]][[1]]
   
   # add to final results
-  Logistic.Regression.df <- rbind(Logistic.Regression.df, result.df[1,])
+  Decision.Tree.df <- rbind(Decision.Tree.df, result.df[1,])
 }
 
 # output a csv file
-write.csv(Logistic.Regression.df, file = "LogisticRegressionResults.csv")
+write.csv(Decision.Tree.df, file = "DecisionTreeResults.csv")
+
