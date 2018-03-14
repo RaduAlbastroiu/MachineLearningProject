@@ -74,7 +74,7 @@ trainAllKMeansFeaturesOnData = function(data, num.iter, first.index, second.inde
 
 
 # num iterations
-num.iter <- 100
+num.iter <- 250
 prog <- 0
 cat("K Means Clustering: ", round((prog/num.datasets)*100, 2), "%\n")
 
