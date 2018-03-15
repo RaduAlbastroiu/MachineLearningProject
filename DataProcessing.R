@@ -13,7 +13,7 @@ hybrid.datasets <- list()
 # simple data
 simple.data <- data
 
-# number of datasets for each method
+# number of datasets of each type
 num.datasets <- 3
 
 # number of elements from each category
@@ -129,6 +129,17 @@ for(i in 1:num.datasets) {
   # add new created df to datasets list
   hybrid.datasets[[i]] <- df.hybrid
 }
+
+
+# C1Stress modified data
+
+# set dataset
+C1Stress.modified.dataset <- data
+  
+C1Stress.modified.dataset$C1Stress <- ifelse(df.C1Stress$PSS_Score <= 22, 'lowStress', df.C1Stress$C1Stress)
+C1Stress.modified.dataset$C1Stress <- ifelse(df.C1Stress$PSS_Score > 28, 'highStress', df.C1Stress$C1Stress)
+C1Stress.modified.dataset$C1Stress <- ifelse(df.C1Stress$C1Stress != 'lowStress' & df.C1Stress$C1Stress != 'highStress', 'moderateStress', df.C1Stress$C1Stress)
+
 
 # remove residual variables
 rm(num.datasets, num.low.stress, num.moderate.stress, num.high.stress)

@@ -22,9 +22,9 @@ datasetsNames = function(first.index, second.index) {
       return('undersampled data')
     if(first.index == 4)
       return('hybrid data')
+    if(first.index == 5)
+      return('c1stress modif data')
     
-    #if(first.index == 5)
-    #  return('undersampled data')
     #if(first.index == 6)
     #  return('normalized undersampled data')
     #if(first.index == 7)
@@ -74,6 +74,11 @@ datasets.list[[3]] <- undersampled.datasets
 datasets.list[[4]] <- hybrid.datasets
 #datasets.list[[9]] <- normalized.hybrid.datasets
 #datasets.list[[10]] <- scaled.hybrid.datasets
+
+# add C1Stress modified data
+c1strees.modified.list <- list()
+c1strees.modified.list[[1]] <- C1Stress.modified.dataset
+datasets.list[[5]] <- c1strees.modified.list
 
 # compute number datasets
 num.datasets <- 0
