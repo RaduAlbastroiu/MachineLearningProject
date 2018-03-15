@@ -17,3 +17,11 @@ MLKmeansClustering(dataset.lists = datasets.list, feature.selection.list = featu
 # Linear Regression
 MLLinearRegression(datasets.list = datasets.list, feature.selection.list = feature.selection.list, num.runs = 5, k = 5)
 
+# Logistic Regression
+MLLogisticRegression(datasets.list = datasets.list, feature.selection.list = feature.selection.list, num.runs = 5, k = 5)
+
+# Decision Tree
+MLDecisionTree(datasets.list = datasets.list, feature.selection.list = feature.selection.list, num.runs = 5, k = 5)
+
+# Random Forest
+MLRandomForest(datasets.list = datasets.list, feature.selection.list = feature.selection.list, num.runs = 5, k = 5)

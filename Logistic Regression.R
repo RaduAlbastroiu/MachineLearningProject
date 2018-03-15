@@ -47,7 +47,7 @@ logRegressionSimpleSplit = function(data, form, split.ratio) {
   result <- vector()
   result[1] <- accuracy
   result[2] <- missclassification.error
-  print(result)
+  
   return(result)
 }
 
@@ -106,7 +106,7 @@ logRegressionKFoldsSplit = function(data, form, k) {
   result <- vector()
   result[1] <- mean(ACC.vec)
   result[2] <- mean(MCE.vec)
-  print(result)
+  
   return(result)
 }
 
@@ -179,58 +179,69 @@ logRegression = function(data, num.runs, k, first.index, second.index) {
   return(result.df)
 }
 
-#parameters
-k <- 5
-num.runs <- 3
 
-curr.num.data <- 1
-
-# create logistic regression data frame
-Logistic.Regression.df <- data.frame(matrix(ncol = 6, nrow = 0))
-colnames(Logistic.Regression.df) <- c("Dataset", "Avg.acc.data.split", "Avg.acc.kfolds", "Avg.mce.data.split", "Avg.mce.kfolds", "Formula")
-
-
-# simple data
-curr.num.data <- 1
-cat("Logistic Regression: Dataset list =", 1, "  dataset =", 1, " -> ", round((curr.num.data/num.datasets)*100, 2), "%\n")
-prediction.simple.data <- logRegression(simple.data, num.runs, k, 1, 1)
-Logistic.Regression.df <- rbind(Logistic.Regression.df, prediction.simple.data)
-Logistic.Regression.df$Formula <- as.character(Logistic.Regression.df$Formula)
-
-# for in list of datasets
-for(i in 2:length(datasets.list)) {
+MLLogisticRegression = function(datasets.list, feature.selection.list, num.runs, k) {
   
-  if(i == 3)
-    break
+  curr.num.data <- 1
   
-  datasets <- datasets.list[[i]]
+  # create logistic regression data frame
+  Logistic.Regression.df <- data.frame(matrix(ncol = 6, nrow = 0))
+  colnames(Logistic.Regression.df) <- c("Dataset", 
+                                        "Avg.acc.data.split", 
+                                        "Avg.acc.kfolds", 
+                                        "Avg.mce.data.split", 
+                                        "Avg.mce.kfolds", 
+                                        "Formula")
   
-  # result
-  result.df <- data.frame(matrix(ncol = 6, nrow = 0))
-  colnames(result.df) <- c("Dataset", "Avg.acc.data.split", "Avg.acc.kfolds", "Avg.mce.data.split", "Avg.mce.kfolds", "Formula")
   
-  # for each dataset train and keep results
-  for(j in 1:length(datasets)) {
+  # simple data
+  curr.num.data <- 1
+  cat("Logistic Regression: Dataset list =", 1, "  dataset =", 1, " -> ", round((curr.num.data/num.datasets)*100, 2), "%\n")
+  prediction.simple.data <- logRegression(simple.data, num.runs, k, 1, 1)
+  Logistic.Regression.df <- rbind(Logistic.Regression.df, prediction.simple.data)
+  Logistic.Regression.df$Formula <- as.character(Logistic.Regression.df$Formula)
+  
+  # for in list of datasets
+  for(i in 2:length(datasets.list)) {
     
-    # progressometer
-    curr.num.data <- curr.num.data + 1
-    cat("Logistic Regression: Dataset list =", i, "  dataset =", j, " -> ", round((curr.num.data/num.datasets)*100, 2), "%\n")
+    # this dataset is not behaving well
+    if(i == 3)
+      break
     
-    # train on dataset
-    dataset <- datasets[[j]]
-    result.df <- rbind(result.df, logRegression(dataset, num.runs, k, i, j))
+    datasets <- datasets.list[[i]]
+    
+    # result
+    result.df <- data.frame(matrix(ncol = 6, nrow = 0))
+    colnames(result.df) <- c("Dataset", 
+                             "Avg.acc.data.split", 
+                             "Avg.acc.kfolds",
+                             "Avg.mce.data.split",
+                             "Avg.mce.kfolds",
+                             "Formula")
+    
+    # for each dataset train and keep results
+    for(j in 1:length(datasets)) {
+      
+      # progressometer
+      curr.num.data <- curr.num.data + 1
+      cat("Logistic Regression: Dataset list =", i, "  dataset =", j, " -> ", round((curr.num.data/num.datasets)*100, 2), "%\n")
+      
+      # train on dataset
+      dataset <- datasets[[j]]
+      result.df <- rbind(result.df, logRegression(dataset, num.runs, k, i, j))
+    }
+    
+    # compute average on column
+    result.df$Avg.acc.data.split <- mean(result.df$Avg.acc.data.split)
+    result.df$Avg.acc.kfolds <- mean(result.df$Avg.acc.kfolds)
+    result.df$Avg.mce.data.split <- mean(result.df$Avg.mce.data.split)
+    result.df$Avg.mce.kfolds <- mean(result.df$Avg.mce.kfolds)
+    result.df$Formula <- rle(sort(result.df$Formula, decreasing = TRUE))[[2]][[1]]
+    
+    # add to final results
+    Logistic.Regression.df <- rbind(Logistic.Regression.df, result.df[1,])
   }
   
-  # compute average on column
-  result.df$Avg.acc.data.split <- mean(result.df$Avg.acc.data.split)
-  result.df$Avg.acc.kfolds <- mean(result.df$Avg.acc.kfolds)
-  result.df$Avg.mce.data.split <- mean(result.df$Avg.mce.data.split)
-  result.df$Avg.mce.kfolds <- mean(result.df$Avg.mce.kfolds)
-  result.df$Formula <- rle(sort(result.df$Formula, decreasing = TRUE))[[2]][[1]]
-  
-  # add to final results
-  Logistic.Regression.df <- rbind(Logistic.Regression.df, result.df[1,])
+  # output a csv file
+  write.csv(Logistic.Regression.df, file = "LogisticRegressionResults.csv")
 }
-
-# output a csv file
-write.csv(Logistic.Regression.df, file = "LogisticRegressionResults.csv")

@@ -1,7 +1,7 @@
-# Decision Tree 
+# Random Forest
 
 # load necessary libs
-library(caret)
+library(randomForest)
 library(dplyr)
 library(rpart)
 library(rpart.plot)
@@ -9,7 +9,7 @@ library(rpart.plot)
 
 # Trains a model using simple split and returns its accuracy/MCE
 # returns a vec where first is accuracy and second is MCE
-decisionTreeSimpleSplit = function(data, form, split.ratio) {
+randForestSimpleSplit = function(data, form, split.ratio) {
   
   data <- select(data, -PSS_Score, -C2Stress)
   
@@ -18,12 +18,15 @@ decisionTreeSimpleSplit = function(data, form, split.ratio) {
   train.data <- temp.list[[1]]
   test.data <- temp.list[[2]]
   
-  # build tree
-  tree <- rpart(C1Stress~ ., method = 'class', data = train.data)
+  # train random forest model
+  randForestModel <- randomForest(form, train.data) 
+  
+  # confusion matrix
+  confMatrix <- randForestModel$confusion
   
   # predict
-  predictions <- predict(tree, type = "class", test.data)
-
+  predictions <- predict(randForestModel, test.data)
+  
   # compute accuracy
   missclassification.error <- mean(predictions != test.data$C1Stress)
   accuracy = 1 - missclassification.error
@@ -39,8 +42,8 @@ decisionTreeSimpleSplit = function(data, form, split.ratio) {
 
 # Trains a model using k folds split and returns its accuracy/MCE
 # returns a vec where first is accuracy and second is MCE
-decisionTreeKFoldsSplit = function(data, form, k) {
-
+randForestKFoldsSplit = function(data, form, k) {
+  
   data <- select(data, -PSS_Score, -C2Stress)
   
   # split data
@@ -57,11 +60,14 @@ decisionTreeKFoldsSplit = function(data, form, k) {
     train.data <- oneFold[[1]]
     test.data <- oneFold[[2]]
     
-    # build tree
-    tree <- rpart(C1Stress~ ., method = 'class', data = train.data)
-  
+    # train random forest model
+    randForestModel <- randomForest(form, train.data)
+    
+    # confusion matrix
+    confMatrix <- randForestModel$confusion
+    
     # predict
-    predictions <- predict(tree, type = "class", test.data)
+    predictions <- predict(randForestModel, test.data)
     
     # compute accuracy
     missclassification.error <- mean(predictions != test.data$C1Stress)
@@ -81,7 +87,7 @@ decisionTreeKFoldsSplit = function(data, form, k) {
   result[2] <- mean(MCE.vec)
   
   return(result)
-}
+  }
 
 
 # For every dataset
@@ -92,8 +98,7 @@ decisionTreeKFoldsSplit = function(data, form, k) {
 # - avg missclassification error for simple data split
 # - avg missclassification error for k folds split
 # - best formula as character
-decisionTree = function(data, num.runs, k, first.index, second.index) {
-  
+randForest = function(data, num.runs, k, first.index, second.index) {
   # store all results
   prediction.ACC.simple.split <- vector()
   prediction.MCE.simple.split <- vector()
@@ -104,11 +109,11 @@ decisionTree = function(data, num.runs, k, first.index, second.index) {
   best.formula <- vector()
   
   for(i in 1:length(feature.selection.list)) {
-  
+    
     cat("feature no. ", i, "\n")
     # formula for this combination of features
     f <- as.formula(paste("C1Stress ~", paste(column.names[feature.selection.list[[i]]][!column.names[feature.selection.list[[i]]] %in% "C1Stress"], collapse = " + ")))
-  
+    
     # for each run
     for(j in 1:num.runs) {
       
@@ -118,7 +123,7 @@ decisionTree = function(data, num.runs, k, first.index, second.index) {
       
       # run simple split as many times as k
       for(z in 1:k) {
-        res <- decisionTreeSimpleSplit(data, f, 0.7)
+        res <- randForestSimpleSplit(data, f, 0.7)
         
         ACC.vec[length(ACC.vec) + 1] <- res[1]
         MCE.vec[length(MCE.vec) + 1] <- res[2]
@@ -132,7 +137,7 @@ decisionTree = function(data, num.runs, k, first.index, second.index) {
       prediction.MCE.simple.split[j] <- mean(MCE.vec)
       
       # run k folds
-      Kfolds.split <- decisionTreeKFoldsSplit(data, f, k)
+      Kfolds.split <- randForestKFoldsSplit(data, f, k)
       prediction.ACC.kfolds.split[j] <- Kfolds.split[1]
       prediction.MCE.kfolds.split[j] <- Kfolds.split[2]
       
@@ -159,14 +164,13 @@ decisionTree = function(data, num.runs, k, first.index, second.index) {
 }
 
 
-# method which runs the Decision Tree algorithm on all datasets 
-MLDecisionTree = function(datasets.list, feature.selection.list, num.runs, k) {
-  
+# method which runs the Random Forest algorithm on all datasets
+MLRandomForest = function(datasets.list, feature.selection.list, num.runs, k) {
   curr.num.data <- 1
   
   # create decision tree data frame
-  Decision.Tree.df <- data.frame(matrix(ncol = 6, nrow = 0))
-  colnames(Decision.Tree.df) <- c("Dataset", 
+  Random.Forest.df <- data.frame(matrix(ncol = 6, nrow = 0))
+  colnames(Random.Forest.df) <- c("Dataset", 
                                   "Avg.acc.data.split", 
                                   "Avg.acc.kfolds", 
                                   "Avg.mce.data.split", 
@@ -177,9 +181,9 @@ MLDecisionTree = function(datasets.list, feature.selection.list, num.runs, k) {
   # simple data
   curr.num.data <- 1
   cat("Decision Tree: Dataset list =", 1, "  dataset =", 1, " -> ", round((curr.num.data/num.datasets)*100, 2), "%\n")
-  prediction.simple.data <- decisionTree(simple.data, num.runs, k, 1, 1)
-  Decision.Tree.df <- rbind(Decision.Tree.df, prediction.simple.data)
-  Decision.Tree.df$Formula <- as.character(Decision.Tree.df$Formula)
+  prediction.simple.data <- randForest(simple.data, num.runs, k, 1, 1)
+  Random.Forest.df <- rbind(Random.Forest.df, prediction.simple.data)
+  Random.Forest.df$Formula <- as.character(Random.Forest.df$Formula)
   
   # for in list of datasets
   for(i in 2:length(datasets.list)) {
@@ -215,9 +219,9 @@ MLDecisionTree = function(datasets.list, feature.selection.list, num.runs, k) {
     result.df$Formula <- rle(sort(result.df$Formula, decreasing = TRUE))[[2]][[1]]
     
     # add to final results
-    Decision.Tree.df <- rbind(Decision.Tree.df, result.df[1,])
+    Random.Forest.df <- rbind(Random.Forest.df, result.df[1,])
   }
   
   # output a csv file
-  write.csv(Decision.Tree.df, file = "DecisionTreeResults.csv")
+  write.csv(Random.Forest.df, file = "RandomForestResults.csv")
 }
