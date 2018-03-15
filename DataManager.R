@@ -17,13 +17,13 @@ datasetsNames = function(first.index, second.index) {
   if(first.index > 1)
   {
     if(first.index == 2)
-      return('oversampled data')
+      return('Oversampled data')
     if(first.index == 3)
-      return('undersampled data')
+      return('Undersampled data')
     if(first.index == 4)
-      return('hybrid data')
+      return('Hybrid data')
     if(first.index == 5)
-      return('c1stress modif data')
+      return('C1stress modif data')
     
     #if(first.index == 6)
     #  return('normalized undersampled data')

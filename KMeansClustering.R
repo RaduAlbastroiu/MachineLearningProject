@@ -58,7 +58,7 @@ trainAllKMeansFeaturesOnData = function(data, num.iter, first.index, second.inde
     feature.data <- as.data.frame(data[,feature.selection.list[[i]]])
     
     # create formula as character
-    form <- as.character(as.formula(paste("PSS_Score ~", paste(column.names[feature.selection.list[[i]]][!column.names[feature.selection.list[[i]]] %in% "PSS_Score"], collapse = " + "))))
+    form <- paste("PSS_Score ~", paste(column.names[feature.selection.list[[i]]][!column.names[feature.selection.list[[i]]] %in% "PSS_Score"], collapse = " + "))
     
     # run training on the new dataset and put it in result dataframe
     result.df <- rbind(result.df, trainKMeansOnData(feature.data, result.column, num.iter, first.index, second.index, form))
@@ -72,57 +72,56 @@ trainAllKMeansFeaturesOnData = function(data, num.iter, first.index, second.inde
 }
 
 
+MLKmeansClustering = function(dataset.lists, feature.selection.list, num.iter) {
 
-# num iterations
-num.iter <- 250
-prog <- 0
-cat("K Means Clustering: ", round((prog/num.datasets)*100, 2), "%\n")
-
-# create data frame for kmeans results
-KMeans.Clustering.df <- data.frame(matrix(ncol = 3, nrow = 0))
-colnames(KMeans.Clustering.df) <- c("Dataset", "AverageAccuracy", "Formula")
-
-# run for simple data
-KMeans.Clustering.df <- rbind(KMeans.Clustering.df, trainAllKMeansFeaturesOnData(simple.data, num.iter, 1, 1))
-
-# Progress
-prog <- prog + 1
-cat("K Means Clustering: Dataset list =", 1, "  dataset =", 1, " -> ", round((prog/num.datasets)*100, 2), "%\n")
-
-# start training on all datasets
-for(i in 2:length(datasets.list)) {
+  prog <- 0
+  cat("K Means Clustering: ", round((prog/num.datasets)*100, 2), "%\n")
   
-  # take list of dataset list
-  dataset.list <- datasets.list[[i]]
+  # create data frame for kmeans results
+  KMeans.Clustering.df <- data.frame(matrix(ncol = 3, nrow = 0))
+  colnames(KMeans.Clustering.df) <- c("Dataset", "AverageAccuracy", "Formula")
   
-  partial.result.df <- data.frame()
+  # run for simple data
+  KMeans.Clustering.df <- rbind(KMeans.Clustering.df, trainAllKMeansFeaturesOnData(simple.data, num.iter, 1, 1))
   
-  # each dataset
-  for(j in 1:length(dataset.list)) {
+  # Progress
+  prog <- prog + 1
+  cat("K Means Clustering: Dataset list =", 1, "  dataset =", 1, " -> ", round((prog/num.datasets)*100, 2), "%\n")
+  
+  # start training on all datasets
+  for(i in 2:length(datasets.list)) {
     
-    partial.result.df <- data.frame(matrix(ncol = 3, nrow = 0))
+    # take list of dataset list
+    dataset.list <- datasets.list[[i]]
     
-    # take dataset
-    dataset <- dataset.list[[j]]
+    partial.result.df <- data.frame()
     
-    # take result
-    result <- trainAllKMeansFeaturesOnData(dataset, num.iter, i, j)
+    # each dataset
+    for(j in 1:length(dataset.list)) {
+      
+      partial.result.df <- data.frame(matrix(ncol = 3, nrow = 0))
+      
+      # take dataset
+      dataset <- dataset.list[[j]]
+      
+      # take result
+      result <- trainAllKMeansFeaturesOnData(dataset, num.iter, i, j)
+      
+      # print progress
+      prog <- prog + 1
+      cat("K Means Clustering: Dataset list =", 1, "  dataset =", 1, " -> ", round((prog/num.datasets)*100, 2), "%\n")
+      
+      # save partial results
+      partial.result.df <- rbind(partial.result.df, result)
+    }
     
-    # print progress
-    prog <- prog + 1
-    cat("K Means Clustering: Dataset list =", 1, "  dataset =", 1, " -> ", round((prog/num.datasets)*100, 2), "%\n")
+    partial.result.df <- partial.result.df[order(partial.result.df$AverageAccuracy, decreasing = TRUE), ]
     
-    # save partial results
-    partial.result.df <- rbind(partial.result.df, result)
+    # save results
+    KMeans.Clustering.df <- rbind(KMeans.Clustering.df, partial.result.df[1,])
   }
   
-  partial.result.df <- partial.result.df[order(partial.result.df$AverageAccuracy, decreasing = TRUE), ]
-  
-  # save results
-  KMeans.Clustering.df <- rbind(KMeans.Clustering.df, partial.result.df[1,])
+  # output a csv file
+  write.csv(KMeans.Clustering.df, file = "KMeansClustering.csv")
+
 }
-
-# output a csv file
-write.csv(KMeans.Clustering.df, file = "KMeansClustering.csv")
-
-
