@@ -11,7 +11,7 @@ library(rpart.plot)
 # returns a vec where first is accuracy and second is MCE
 randForestSimpleSplit = function(data, form, split.ratio) {
   
-  data <- select(data, -PSS_Score, -C2Stress)
+  data <- data[, !colnames(data) %in% c("PSS_Score", "C2Stress")]
   
   # split data
   temp.list <- dataSplit(data, data$C1Stress, split.ratio)
@@ -44,7 +44,7 @@ randForestSimpleSplit = function(data, form, split.ratio) {
 # returns a vec where first is accuracy and second is MCE
 randForestKFoldsSplit = function(data, form, k) {
   
-  data <- select(data, -PSS_Score, -C2Stress)
+  data <- data[, !colnames(data) %in% c("PSS_Score", "C2Stress")]
   
   # split data
   folds <- kFoldSplit(data, k)
@@ -110,7 +110,6 @@ randForest = function(data, num.runs, k, first.index, second.index) {
   
   for(i in 1:length(feature.selection.list)) {
     
-    cat("feature no. ", i, "\n")
     # formula for this combination of features
     f <- as.formula(paste("C1Stress ~", paste(column.names[feature.selection.list[[i]]][!column.names[feature.selection.list[[i]]] %in% "C1Stress"], collapse = " + ")))
     

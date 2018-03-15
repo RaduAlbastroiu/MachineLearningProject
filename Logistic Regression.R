@@ -9,8 +9,7 @@ library(dplyr)
 # returns a vec where first is accuracy and second is MCE
 logRegressionSimpleSplit = function(data, form, split.ratio) {
   
-  #remove the other class
-  data <- select(data, -C2Stress, -PSS_Score)
+  data <- data[, !colnames(data) %in% c("PSS_Score", "C2Stress")]
   
   # split data
   temp.list <- dataSplit(data, data$C1Stress, split.ratio)
@@ -55,8 +54,7 @@ logRegressionSimpleSplit = function(data, form, split.ratio) {
 # returns a vec where first is accuracy and second is MCE
 logRegressionKFoldsSplit = function(data, form, k) {
   
-  #remove the other class
-  data <- select(data, -C2Stress, -PSS_Score)
+  data <- data[, !colnames(data) %in% c("PSS_Score", "C2Stress")]
   
   # split data
   folds <- kFoldSplit(data, k)
