@@ -139,7 +139,7 @@ C1Stress.modified.dataset <- data
 C1Stress.modified.dataset$C1Stress <- ifelse(df.C1Stress$PSS_Score <= 22, 'lowStress', df.C1Stress$C1Stress)
 C1Stress.modified.dataset$C1Stress <- ifelse(df.C1Stress$PSS_Score > 28, 'highStress', df.C1Stress$C1Stress)
 C1Stress.modified.dataset$C1Stress <- ifelse(df.C1Stress$C1Stress != 'lowStress' & df.C1Stress$C1Stress != 'highStress', 'moderateStress', df.C1Stress$C1Stress)
-
+C1Stress.modified.dataset$C1Stress <- as.factor(C1Stress.modified.dataset$C1Stress)
 
 # remove residual variables
 rm(num.datasets, num.low.stress, num.moderate.stress, num.high.stress)

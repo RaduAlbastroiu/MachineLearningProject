@@ -1,5 +1,9 @@
 # Support Vector Machines
 
+
+# adding library
+library(e1071)
+
 # tune and run svm
 # returns accuracy
 svmTuneRun = function(train, trainResult, test, testResult) {
@@ -30,7 +34,6 @@ svmFeatureRun = function(data, k, first.index, second.index) {
   best.formula <- 'a'
   
   for(i in 1:length(feature.selection.list)) {
-    cat("Linear Regression: Feature combination number =", i, "\n")
     # split data on features
     partial.data <- as.data.frame(data[,feature.selection.list[[i]]])
     partial.data$Result <- data$C1Stress
@@ -69,7 +72,7 @@ svmFeatureRun = function(data, k, first.index, second.index) {
     
     # refresh results
     avg <- 0
-    if(is.na(kfold.split.result) == FALSE && is.na(simple.split.result) == FALSE) {
+    if(is.na(kfold.split.result) == FALSE & is.na(simple.split.result) == FALSE) {
       # compute avg
       avg <- (kfold.split.result + simple.split.result)/2
       old.avg <- (best.kfolds.split + best.simple.split)/2
@@ -93,85 +96,52 @@ svmFeatureRun = function(data, k, first.index, second.index) {
   return(result.df)
 }
 
+# run svm for a dataset list and a feature selection list
+# write a csv file with results of svm ml
+MLSVM = function(datasets.list, feature.selection.list, k) { 
 
-
-# set value for kfolds
-k <- 5
-
-# create results df
-SVM.df.results <- data.frame(matrix(ncol = 4, nrow = 0))
-colnames(SVM.df.results) <- c("Dataset", "Avg.pred.data.split", "Avg.pred.kfolds", "Formula")
-
-# run simple.data
-cat("Linear Regression Dataset: Simple data\n")
-SVM.df.results <- rbind(SVM.df.results, svmFeatureRun(simple.data, k, 1, 1))
-
-
-
-# run for oversampled data
-partial.results.df <- data.frame(matrix(ncol = 4, nrow = 0))
-colnames(partial.results.df) <- c("Dataset", "Avg.pred.data.split", "Avg.pred.kfolds", "Formula")
-for(i in 1:length(oversampled.datasets)) {
-  cat("Linear Regression Dataset: Oversampled data num.", i,"\n")
-  # take dataset
-  dataset <- oversampled.datasets[[i]]
+  # create results df
+  SVM.df.results <- data.frame(matrix(ncol = 4, nrow = 0))
+  colnames(SVM.df.results) <- c("Dataset", "Avg.pred.data.split", "Avg.pred.kfolds", "Formula")
   
-  # run train
-  partial.results.df <- rbind(partial.results.df, svmFeatureRun(dataset, k, 2, 1))
-}
-partial.results.df[order(partial.results.df$Avg.pred.data.split, decreasing = TRUE), ]
-partial.results.df$Avg.pred.data.split <- mean(partial.results.df$Avg.pred.data.split)
-partial.results.df$Avg.pred.kfolds <- mean(partial.results.df$Avg.pred.kfolds)
-
-# bind to result
-SVM.df.results <- rbind(SVM.df.results, partial.results.df[1,])
-
-
-
-
-# run for undersampled data
-partial.results.df <- data.frame(matrix(ncol = 4, nrow = 0))
-colnames(partial.results.df) <- c("Dataset", "Avg.pred.data.split", "Avg.pred.kfolds", "Formula")
-for(i in 1:length(undersampled.datasets)) {
-  cat("Linear Regression Dataset: Undersamples data num.", i,"\n")
-  # take dataset
-  dataset <- undersampled.datasets[[i]]
+  # run simple.data
+  cat("Linear Regression Dataset: Simple data\n")
+  SVM.df.results <- rbind(SVM.df.results, svmFeatureRun(simple.data, k, 1, 1))
   
-  # run train
-  partial.results.df <- rbind(partial.results.df, svmFeatureRun(dataset, k, 3, 1))
-}
-partial.results.df[order(partial.results.df$Avg.pred.data.split, decreasing = TRUE), ]
-partial.results.df$Avg.pred.data.split <- mean(partial.results.df$Avg.pred.data.split)
-partial.results.df$Avg.pred.kfolds <- mean(partial.results.df$Avg.pred.kfolds)
-
-# bind to result
-SVM.df.results <- rbind(SVM.df.results, partial.results.df[1,])
-
-
-
-
-# run for hybrid data
-partial.results.df <- data.frame(matrix(ncol = 4, nrow = 0))
-colnames(partial.results.df) <- c("Dataset", "Avg.pred.data.split", "Avg.pred.kfolds", "Formula")
-for(i in 1:length(hybrid.datasets)) {
-  cat("Linear Regression Dataset: Hybrid data num.", i,"\n")
-  # take dataset
-  dataset <- hybrid.datasets[[i]]
   
-  # run train
-  partial.results.df <- rbind(partial.results.df, svmFeatureRun(dataset, k, 4, 1))
+  # run for all datasets
+  for(i in 2:length(datasets.list)) {
+    
+    # current dataset  
+    dataset.list <- datasets.list[[i]]
+    
+    # run for data
+    partial.results.df <- data.frame(matrix(ncol = 4, nrow = 0))
+    colnames(partial.results.df) <- c("Dataset", "Avg.pred.data.split", "Avg.pred.kfolds", "Formula")
+    for(j in 1:length(dataset.list)) {
+      
+      cat("SVM working on Dataset: ", datasetsNames(i,j), " nr of dataset:", j,"\n")
+      
+      # take dataset
+      dataset <- dataset.list[[j]]
+      
+      # run train
+      a <-  svmFeatureRun(dataset, k, i, j)
+      partial.results.df <- rbind(partial.results.df, a)
+    }
+    
+    partial.results.df[order(partial.results.df$Avg.pred.data.split, decreasing = TRUE), ]
+    partial.results.df$Avg.pred.data.split <- mean(partial.results.df$Avg.pred.data.split)
+    partial.results.df$Avg.pred.kfolds <- mean(partial.results.df$Avg.pred.kfolds)
+    
+    # bind to result
+    SVM.df.results <- rbind(SVM.df.results, partial.results.df[1,])
+  }
+  
+  
+  # write a csv
+  write.csv(SVM.df.results, file = "SupportVectorMachinesResult.csv")
+
 }
-partial.results.df[order(partial.results.df$Avg.pred.data.split, decreasing = TRUE), ]
-partial.results.df$Avg.pred.data.split <- mean(partial.results.df$Avg.pred.data.split)
-partial.results.df$Avg.pred.kfolds <- mean(partial.results.df$Avg.pred.kfolds)
-
-# bind to result
-SVM.df.results <- rbind(SVM.df.results, partial.results.df[1,])
-
-
-# write a csv
-write.csv(SVM.df.results, file = "SupportVectorMachinesResult.csv")
-
-
 
 
