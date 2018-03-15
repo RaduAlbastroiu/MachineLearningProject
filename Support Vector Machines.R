@@ -100,12 +100,14 @@ svmFeatureRun = function(data, k, first.index, second.index) {
 # write a csv file with results of svm ml
 MLSVM = function(datasets.list, feature.selection.list, k) { 
 
+  curr.num.data <- 1
+  
   # create results df
   SVM.df.results <- data.frame(matrix(ncol = 4, nrow = 0))
   colnames(SVM.df.results) <- c("Dataset", "Avg.pred.data.split", "Avg.pred.kfolds", "Formula")
   
   # run simple.data
-  cat("Linear Regression Dataset: Simple data\n")
+  cat("SVM working on Dataset: Simple data ->", round((curr.num.data/num.datasets)*100, 2), "%\n")
   SVM.df.results <- rbind(SVM.df.results, svmFeatureRun(simple.data, k, 1, 1))
   
   
@@ -120,8 +122,9 @@ MLSVM = function(datasets.list, feature.selection.list, k) {
     colnames(partial.results.df) <- c("Dataset", "Avg.pred.data.split", "Avg.pred.kfolds", "Formula")
     for(j in 1:length(dataset.list)) {
       
-      cat("SVM working on Dataset: ", datasetsNames(i,j), " nr of dataset:", j,"\n")
-      
+      curr.num.data <- curr.num.data + 1
+      cat("SVM working on Dataset:", datasetsNames(i,j), " nr of dataset:", j, "->", round((curr.num.data/num.datasets)*100, 2), "%\n")
+
       # take dataset
       dataset <- dataset.list[[j]]
       
