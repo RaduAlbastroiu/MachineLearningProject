@@ -121,6 +121,9 @@ MLKmeansClustering = function(dataset.lists, feature.selection.list, num.iter) {
     KMeans.Clustering.df <- rbind(KMeans.Clustering.df, partial.result.df[1,])
   }
   
+  # accuracy expressed on a 0 to 1 scale
+  KMeans.Clustering.df$AverageAccuracy <- KMeans.Clustering.df$AverageAccuracy/100
+  
   # output a csv file
   write.csv(KMeans.Clustering.df, file = "KMeansClustering.csv")
 
