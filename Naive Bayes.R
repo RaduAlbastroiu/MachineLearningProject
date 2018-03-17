@@ -1,15 +1,13 @@
 # Decision Tree 
 
 # load necessary libs
-library(caret)
+library(e1071)
 library(dplyr)
-library(rpart)
-library(rpart.plot)
 
 
 # Trains a model using simple split and returns its accuracy/MCE
 # returns a vec where first is accuracy and second is MCE
-decisionTreeSimpleSplit = function(data, form, split.ratio) {
+naiveBayesSimpleSplit = function(data, form, split.ratio) {
   
   data <- data[, !colnames(data) %in% c("PSS_Score", "C2Stress")]
   
@@ -19,10 +17,10 @@ decisionTreeSimpleSplit = function(data, form, split.ratio) {
   test.data <- temp.list[[2]]
   
   # build tree
-  tree <- rpart(form, method = 'class', data = train.data)
+  model <- naiveBayes(form, data = train.data)
   
   # predict
-  predictions <- predict(tree, type = "class", test.data)
+  predictions <- predict(model, test.data, type = "class")
 
   # compute accuracy
   missclassification.error <- mean(predictions != test.data$C1Stress)
@@ -39,8 +37,8 @@ decisionTreeSimpleSplit = function(data, form, split.ratio) {
 
 # Trains a model using k folds split and returns its accuracy/MCE
 # returns a vec where first is accuracy and second is MCE
-decisionTreeKFoldsSplit = function(data, form, k) {
-
+naiveBayesKFoldsSplit = function(data, form, k) {
+  
   data <- data[, !colnames(data) %in% c("PSS_Score", "C2Stress")]
   
   # split data
@@ -58,10 +56,10 @@ decisionTreeKFoldsSplit = function(data, form, k) {
     test.data <- oneFold[[2]]
     
     # build tree
-    tree <- rpart(form, method = 'class', data = train.data)
-  
+    model <- naiveBayes(form, data = train.data)
+    
     # predict
-    predictions <- predict(tree, type = "class", test.data)
+    predictions <- predict(model, test.data, type = "class")
     
     # compute accuracy
     missclassification.error <- mean(predictions != test.data$C1Stress)
@@ -92,7 +90,7 @@ decisionTreeKFoldsSplit = function(data, form, k) {
 # - avg missclassification error for simple data split
 # - avg missclassification error for k folds split
 # - best formula as character
-decisionTree = function(data, num.runs, k, first.index, second.index) {
+naiveBayesClassifier = function(data, num.runs, k, first.index, second.index) {
   
   # store all results
   prediction.ACC.simple.split <- vector()
@@ -104,10 +102,11 @@ decisionTree = function(data, num.runs, k, first.index, second.index) {
   best.formula <- vector()
   
   for(i in 1:length(feature.selection.list)) {
-  
+    
+    cat("Feature no.", i, "\n")
     # formula for this combination of features
     f <- as.formula(paste("C1Stress ~", paste(column.names[feature.selection.list[[i]]][!column.names[feature.selection.list[[i]]] %in% "C1Stress"], collapse = " + ")))
-  
+    
     # for each run
     for(j in 1:num.runs) {
       
@@ -117,7 +116,7 @@ decisionTree = function(data, num.runs, k, first.index, second.index) {
       
       # run simple split as many times as k
       for(z in 1:k) {
-        res <- decisionTreeSimpleSplit(data, f, 0.7)
+        res <- naiveBayesSimpleSplit(data, f, 0.7)
         
         ACC.vec[length(ACC.vec) + 1] <- res[1]
         MCE.vec[length(MCE.vec) + 1] <- res[2]
@@ -131,7 +130,7 @@ decisionTree = function(data, num.runs, k, first.index, second.index) {
       prediction.MCE.simple.split[j] <- mean(MCE.vec)
       
       # run k folds
-      Kfolds.split <- decisionTreeKFoldsSplit(data, f, k)
+      Kfolds.split <- naiveBayesKFoldsSplit(data, f, k)
       prediction.ACC.kfolds.split[j] <- Kfolds.split[1]
       prediction.MCE.kfolds.split[j] <- Kfolds.split[2]
       
@@ -159,13 +158,13 @@ decisionTree = function(data, num.runs, k, first.index, second.index) {
 
 
 # method which runs the Decision Tree algorithm on all datasets 
-MLDecisionTree = function(datasets.list, feature.selection.list, num.runs, k) {
+MLNaiveBayes = function(datasets.list, feature.selection.list, num.runs, k) {
   
   curr.num.data <- 1
   
   # create decision tree data frame
-  Decision.Tree.df <- data.frame(matrix(ncol = 6, nrow = 0))
-  colnames(Decision.Tree.df) <- c("Dataset", 
+  Naive.Bayes.df <- data.frame(matrix(ncol = 6, nrow = 0))
+  colnames(Naive.Bayes.df) <- c("Dataset", 
                                   "Avg.acc.data.split", 
                                   "Avg.acc.kfolds", 
                                   "Avg.mce.data.split", 
@@ -176,47 +175,50 @@ MLDecisionTree = function(datasets.list, feature.selection.list, num.runs, k) {
   # simple data
   curr.num.data <- 1
   cat("Decision Tree: Dataset list =", 1, "  dataset =", 1, " -> ", round((curr.num.data/num.datasets)*100, 2), "%\n")
-  prediction.simple.data <- decisionTree(simple.data, num.runs, k, 1, 1)
-  Decision.Tree.df <- rbind(Decision.Tree.df, prediction.simple.data)
-  Decision.Tree.df$Formula <- as.character(Decision.Tree.df$Formula)
+  prediction.simple.data <- naiveBayesClassifier(simple.data, num.runs, k, 1, 1)
+  Naive.Bayes.df <- rbind(Naive.Bayes.df, prediction.simple.data)
+  Naive.Bayes.df$Formula <- as.character(Naive.Bayes.df$Formula)
   
   # for in list of datasets
   for(i in 2:length(datasets.list)) {
+
+    if(i == 3)
+      next
     
     datasets <- datasets.list[[i]]
-    
+
     # result
     result.df <- data.frame(matrix(ncol = 6, nrow = 0))
-    colnames(result.df) <- c("Dataset", 
-                             "Avg.acc.data.split", 
+    colnames(result.df) <- c("Dataset",
+                             "Avg.acc.data.split",
                              "Avg.acc.kfolds",
                              "Avg.mce.data.split",
                              "Avg.mce.kfolds",
                              "Formula")
-    
+
     # for each dataset train and keep results
     for(j in 1:length(datasets)) {
-      
+
       # progressometer
       curr.num.data <- curr.num.data + 1
-      cat("Decision Tree: Dataset list =", i, "  dataset =", j, " -> ", round((curr.num.data/num.datasets)*100, 2), "%\n")
-      
+      cat("Naive Bayes: Dataset list =", i, "  dataset =", j, " -> ", round((curr.num.data/num.datasets)*100, 2), "%\n")
+
       # train on dataset
       dataset <- datasets[[j]]
-      result.df <- rbind(result.df, decisionTree(dataset, num.runs, k, i, j))
+      result.df <- rbind(result.df, naiveBayesClassifier(dataset, num.runs, k, i, j))
     }
-    
+
     # compute average on column
     result.df$Avg.acc.data.split <- mean(result.df$Avg.acc.data.split)
     result.df$Avg.acc.kfolds <- mean(result.df$Avg.acc.kfolds)
     result.df$Avg.mce.data.split <- mean(result.df$Avg.mce.data.split)
     result.df$Avg.mce.kfolds <- mean(result.df$Avg.mce.kfolds)
     result.df$Formula <- rle(sort(result.df$Formula, decreasing = TRUE))[[2]][[1]]
-    
+
     # add to final results
-    Decision.Tree.df <- rbind(Decision.Tree.df, result.df[1,])
+    Naive.Bayes.df <- rbind(Naive.Bayes.df, result.df[1,])
   }
   
   # output a csv file
-  write.csv(Decision.Tree.df, file = "DecisionTreeResults.csv")
+  write.csv(Naive.Bayes.df, file = "NaiveBayesResults.csv")
 }
