@@ -1,6 +1,7 @@
 # Filter data
 
 library(caTools)
+library(ROSE)
 
 # Filter average excess of distance 
 data <- subset(data, averageExcessOfDistanceBetweenClicks < 25 & decision_time_efficiency > 10000)
@@ -9,6 +10,7 @@ data <- subset(data, averageExcessOfDistanceBetweenClicks < 25 & decision_time_e
 undersampled.datasets <- list()
 oversampled.datasets <- list()
 hybrid.datasets <- list()
+rose.datasets <- list()
 
 # simple data
 simple.data <- data
@@ -129,6 +131,27 @@ for(i in 1:num.datasets) {
   # add new created df to datasets list
   hybrid.datasets[[i]] <- df.hybrid
 }
+
+
+# rose method
+for(i in 1:(2*num.datasets)) {
+  
+  # take only 2 v
+  lowModDf <- subset(simple.data, C1Stress != 'highStress')
+  highModDf <- subset(simple.data, C1Stress != 'lowStress')
+
+  # apply rose method
+  lowModDf <- ROSE(C1Stress~., data = lowModDf, N = 100)$data
+  highModDf <- ROSE(C1Stress~., data = highModDf, N = 100)$data
+  
+  # combine the results
+  resultDf <- lowModDf
+  resultDf <- rbind(resultDf, subset(highModDf, C1Stress == 'highStress'))
+  
+  # put results in list
+  rose.datasets[[i]] <- resultDf
+}
+
 
 
 # C1Stress modified data

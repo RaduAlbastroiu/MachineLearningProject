@@ -24,6 +24,8 @@ datasetsNames = function(first.index, second.index) {
       return('Hybrid data')
     if(first.index == 5)
       return('C1stress modif data')
+    if(first.index == 6)
+      return('Rose method dataset')
     
     #if(first.index == 6)
     #  return('normalized undersampled data')
@@ -79,6 +81,11 @@ datasets.list[[4]] <- hybrid.datasets
 c1strees.modified.list <- list()
 c1strees.modified.list[[1]] <- C1Stress.modified.dataset
 datasets.list[[5]] <- c1strees.modified.list
+
+# add Rose data
+datasets.list[[6]] <- rose.datasets
+
+
 
 # compute number datasets
 num.datasets <- 0
