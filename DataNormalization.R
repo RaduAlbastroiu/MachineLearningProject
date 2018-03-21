@@ -75,31 +75,26 @@ scaleDatasets = function(datasets) {
   return(scaled.datasets)
 }
 
-# unscale a dataset
-unscaleData =  function(scaled.data, unscaled.data) {
-  
-}
-
 # data normalization
 
 # simple data normalized and scaled
-normalized.simple.data <- normalizeData(simple.data)
-scaled.simple.data <- scaleData(simple.data)
+#normalized.simple.data <- normalizeData(simple.data)
+#scaled.simple.data <- scaleData(simple.data)
 
 
 # oversampled data normalized and scaled
-normalized.oversampled.datasets <- normalizeDatasets(oversampled.datasets)
-scaled.oversampled.datasets <- scaleDatasets(oversampled.datasets)
+#normalized.oversampled.datasets <- normalizeDatasets(oversampled.datasets)
+#scaled.oversampled.datasets <- scaleDatasets(oversampled.datasets)
 
 
 # undersampled data normalized and scaled
-normalized.undersampled.datasets <- normalizeDatasets(undersampled.datasets)
-scaled.undersampled.datasets <- scaleDatasets(undersampled.datasets)
+#normalized.undersampled.datasets <- normalizeDatasets(undersampled.datasets)
+#scaled.undersampled.datasets <- scaleDatasets(undersampled.datasets)
 
 
 # hybrid data normalized and scaled
-normalized.hybrid.datasets <- normalizeDatasets(hybrid.datasets)
-scaled.hybrid.datasets <- scaleDatasets(hybrid.datasets)
+#normalized.hybrid.datasets <- normalizeDatasets(hybrid.datasets)
+#scaled.hybrid.datasets <- scaleDatasets(hybrid.datasets)
 
 # remove residual variables
 rm(normalizeData, scaleData, normalizeDatasets, scaleDatasets)

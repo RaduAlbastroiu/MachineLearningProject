@@ -98,13 +98,10 @@ for(i in 1:length(datasets.list)) {
   num.datasets <- num.datasets + length(datasets.list[[i]])
 }
 
-rm(simple.list)
+rm(i)
+rm(simple.list, c1stress.modified.list)
 rm(normalized.simple.data, scaled.simple.data)
-rm(oversampled.datasets)
 rm(normalized.oversampled.datasets, scaled.oversampled.datasets)
-rm(undersampled.datasets)
 rm(normalized.undersampled.datasets, scaled.undersampled.datasets)
-rm(hybrid.datasets)
 rm(normalized.hybrid.datasets, scaled.hybrid.datasets)
-rm(C1Stress.modified.dataset, c1stress.modified.list)
-rm(rose.datasets, smote.datasets)
+

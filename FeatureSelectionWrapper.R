@@ -10,7 +10,7 @@ extractFeatures = function(stepwise) {
   j <- 1
   for(name.col in result) {
     for(i in 3:30) {
-      if(name.col == column.names[i]) {
+      if(name.col == colnames(primary.data)[i]) {
         num.col[j] <- i
         break()
       }
