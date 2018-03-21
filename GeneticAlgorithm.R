@@ -1,8 +1,9 @@
 # genetic algorithm
 
-library("GA")
-library("foreach")
-library("iterators")
+# load necessary libs
+library(GA)
+library(foreach)
+library(iterators)
 
 
 Rastrigin <- function(x1, x2)

@@ -39,7 +39,6 @@ trainKMeansOnData = function(data, result.column, num.iter, first.index, second.
 }
 
 
-
 # call train method with all combinations of features for a data object
 # returns data frame
 trainAllKMeansFeaturesOnData = function(data, num.iter, first.index, second.index) {

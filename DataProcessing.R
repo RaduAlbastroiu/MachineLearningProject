@@ -154,6 +154,7 @@ for(i in 1:(2*num.datasets)) {
   rose.datasets[[i]] <- resultDf
 }
 
+
 # smote method
 for(i in 1:(2*num.datasets)) {
   
@@ -177,6 +178,7 @@ for(i in 1:(2*num.datasets)) {
   smote.datasets[[i]] <- resultDf
 }
 
+
 # C1Stress modified data
 
 # set dataset
@@ -194,3 +196,4 @@ rm(df.low.copy, df.moderate.copy, df.high.copy)
 rm(sample.low, sample.moderate, sample.high)
 rm(i, index, row, selection.num)
 rm(df.undersampled, df.oversampled, df.hybrid)
+rm(lowModDf, highModDf, resultDf)

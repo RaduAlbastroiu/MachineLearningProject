@@ -1,7 +1,6 @@
 # Support Vector Machines
 
-
-# adding library
+# load necessary libs
 library(e1071)
 
 # tune and run svm

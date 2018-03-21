@@ -240,6 +240,8 @@ MLLogisticRegression = function(datasets.list, feature.selection.list, num.runs,
     Logistic.Regression.df <- rbind(Logistic.Regression.df, result.df[1,])
   }
   
+  results_all <- rbind(results_all, cbind("Logistic Regression", Logistic.Regression.df))
+  
   # output a csv file
   write.csv(Logistic.Regression.df, file = "LogisticRegressionResults.csv")
 }

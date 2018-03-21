@@ -80,9 +80,9 @@ datasets.list[[4]] <- hybrid.datasets
 #datasets.list[[10]] <- scaled.hybrid.datasets
 
 # add C1Stress modified data
-c1strees.modified.list <- list()
-c1strees.modified.list[[1]] <- C1Stress.modified.dataset
-datasets.list[[5]] <- c1strees.modified.list
+c1stress.modified.list <- list()
+c1stress.modified.list[[1]] <- C1Stress.modified.dataset
+datasets.list[[5]] <- c1stress.modified.list
 
 # add Rose data
 datasets.list[[6]] <- rose.datasets
@@ -98,3 +98,13 @@ for(i in 1:length(datasets.list)) {
   num.datasets <- num.datasets + length(datasets.list[[i]])
 }
 
+rm(simple.list)
+rm(normalized.simple.data, scaled.simple.data)
+rm(oversampled.datasets)
+rm(normalized.oversampled.datasets, scaled.oversampled.datasets)
+rm(undersampled.datasets)
+rm(normalized.undersampled.datasets, scaled.undersampled.datasets)
+rm(hybrid.datasets)
+rm(normalized.hybrid.datasets, scaled.hybrid.datasets)
+rm(C1Stress.modified.dataset, c1stress.modified.list)
+rm(rose.datasets, smote.datasets)
