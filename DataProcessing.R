@@ -2,6 +2,7 @@
 
 library(caTools)
 library(ROSE)
+library(DMwR)
 
 # Filter average excess of distance 
 data <- subset(data, averageExcessOfDistanceBetweenClicks < 25 & decision_time_efficiency > 10000)
@@ -11,6 +12,7 @@ undersampled.datasets <- list()
 oversampled.datasets <- list()
 hybrid.datasets <- list()
 rose.datasets <- list()
+smote.datasets <- list()
 
 # simple data
 simple.data <- data
@@ -152,7 +154,28 @@ for(i in 1:(2*num.datasets)) {
   rose.datasets[[i]] <- resultDf
 }
 
-
+# smote method
+for(i in 1:(2*num.datasets)) {
+  
+  # take only 2 v
+  lowModDf <- subset(simple.data, C1Stress != 'highStress')
+  highModDf <- subset(simple.data, C1Stress != 'lowStress')
+  
+  # reduce factors to only 2
+  lowModDf$C1Stress <- factor(lowModDf$C1Stress)
+  highModDf$C1Stress <- factor(highModDf$C1Stress)
+  
+  # apply smote method
+  lowModDf <- SMOTE(C1Stress ~ ., data = lowModDf, perc.over = 350, perc.under=150)
+  highModDf <- SMOTE(C1Stress ~ ., data = highModDf, perc.over = 600, perc.under=150)
+  
+  # combine the results
+  resultDf <- lowModDf
+  resultDf <- rbind(resultDf, subset(highModDf, C1Stress == 'highStress'))
+  
+  # put results in list
+  smote.datasets[[i]] <- resultDf
+}
 
 # C1Stress modified data
 
