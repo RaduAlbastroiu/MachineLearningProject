@@ -14,7 +14,7 @@ MLSVM(datasets.list = datasets.list, feature.list = feature.selection.list[1:10]
 
 # KMeans
 source("KMeansClustering.R")
-MLKmeansClustering(dataset.lists = datasets.list, feature.selection.list = feature.selection.list, num.iter = 500)
+MLKmeansClustering(a.datasets.list = datasets.list, a.feature.list = feature.selection.list, a.num.iter = 10)
 
 # Linear Regression
 source("Linear Regression.R")

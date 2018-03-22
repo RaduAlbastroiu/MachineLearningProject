@@ -2,19 +2,19 @@
 
 # train K Means on a data with specific columns
 # returns data frame
-trainKMeansOnData = function(data, result.column, num.iter, first.index, second.index, form) {
+trainKMeansOnData = function(a.data, a.result.column, a.num.iter, a.first.index, a.second.index, a.form) {
   
   # store results
   acc.vec <- vector()
   
   # train for num.iter times
-  for(i in 1:num.iter) {
+  for(i in 1:a.num.iter) {
     
     # train model
-    model <- kmeans(data, 3)
+    model <- kmeans(a.data, 3)
     
     # create confusion matrix
-    conf.matrix <- table(model$cluster, result.column)
+    conf.matrix <- table(model$cluster, a.result.column)
     
     # compute all combinations for the 3 clusters
     s1 <- conf.matrix[1,1] + conf.matrix[2,2] + conf.matrix[3,3]
@@ -29,9 +29,9 @@ trainKMeansOnData = function(data, result.column, num.iter, first.index, second.
   }
   
   result.df <- data.frame(matrix(ncol = 3, nrow = 1))
-  result.df[1,1] <- datasetsNames(first.index, second.index)
-  result.df[1,2] <- round((mean(acc.vec)/nrow(data))*100, 2)
-  result.df[1,3] <- form
+  result.df[1,1] <- datasetsNames(a.first.index, a.second.index)
+  result.df[1,2] <- mean(acc.vec)/nrow(a.data)
+  result.df[1,3] <- a.form
   colnames(result.df) <- c("Dataset", "AverageAccuracy", "Formula")
   
   # return mean 
@@ -41,26 +41,26 @@ trainKMeansOnData = function(data, result.column, num.iter, first.index, second.
 
 # call train method with all combinations of features for a data object
 # returns data frame
-trainAllKMeansFeaturesOnData = function(data, num.iter, first.index, second.index) {
+trainAllKMeansFeaturesOnData = function(a.data, a.feature.list, a.num.iter, a.first.index, a.second.index) {
   
   # create result dataframe
   result.df <- data.frame(matrix(ncol = 3, nrow = 0))
   colnames(result.df) <- c("Dataset", "Accuracy", "Formula")
   
   # set result.column
-  result.column <- data$C1Stress
+  result.column <- a.data$C1Stress
   
   # for each feature combination
-  for(i in 1:length(feature.selection.list)) {
+  for(i in 1:length(a.feature.list)) {
     
     # create data with custom feature combination
-    feature.data <- as.data.frame(data[,feature.selection.list[[i]]])
+    feature.data <- as.data.frame(a.data[,a.feature.list[[i]]])
     
     # create formula as character
-    form <- paste("PSS_Score ~", paste(column.names[feature.selection.list[[i]]][!column.names[feature.selection.list[[i]]] %in% "PSS_Score"], collapse = " + "))
+    form <- paste("PSS_Score ~", paste(column.names[a.feature.list[[i]]][!column.names[a.feature.list[[i]]] %in% "PSS_Score"], collapse = " + "))
     
     # run training on the new dataset and put it in result dataframe
-    result.df <- rbind(result.df, trainKMeansOnData(feature.data, result.column, num.iter, first.index, second.index, form))
+    result.df <- rbind(result.df, trainKMeansOnData(feature.data, result.column, a.num.iter, a.first.index, a.second.index, form))
   }
   
   
@@ -71,27 +71,23 @@ trainAllKMeansFeaturesOnData = function(data, num.iter, first.index, second.inde
 }
 
 
-MLKmeansClustering = function(dataset.lists, feature.selection.list, num.iter) {
+MLKmeansClustering = function(a.datasets.list, a.feature.list, a.num.iter) {
 
-  prog <- 0
-  cat("K Means Clustering: ", round((prog/num.datasets)*100, 2), "%\n")
+  # start timing
+  start.time.SVM <- proc.time()
+  
+  curr.num.data <- 0
+  cat("K Means Clustering: ", round((curr.num.data/num.datasets)*100, 2), "%\n")
   
   # create data frame for kmeans results
   KMeans.Clustering.df <- data.frame(matrix(ncol = 3, nrow = 0))
   colnames(KMeans.Clustering.df) <- c("Dataset", "AverageAccuracy", "Formula")
   
-  # run for simple data
-  KMeans.Clustering.df <- rbind(KMeans.Clustering.df, trainAllKMeansFeaturesOnData(simple.data, num.iter, 1, 1))
-  
-  # Progress
-  prog <- prog + 1
-  cat("K Means Clustering: Dataset list =", 1, "  dataset =", 1, " -> ", round((prog/num.datasets)*100, 2), "%\n")
-  
   # start training on all datasets
-  for(i in 2:length(datasets.list)) {
+  for(i in 1:length(a.datasets.list)) {
     
     # take list of dataset list
-    dataset.list <- datasets.list[[i]]
+    dataset.list <- a.datasets.list[[i]]
     
     partial.result.df <- data.frame()
     
@@ -104,11 +100,12 @@ MLKmeansClustering = function(dataset.lists, feature.selection.list, num.iter) {
       dataset <- dataset.list[[j]]
       
       # take result
-      result <- trainAllKMeansFeaturesOnData(dataset, num.iter, i, j)
+      result <- trainAllKMeansFeaturesOnData(dataset, a.feature.list, a.num.iter, i, j)
       
       # print progress
-      prog <- prog + 1
-      cat("K Means Clustering: Dataset list =", 1, "  dataset =", 1, " -> ", round((prog/num.datasets)*100, 2), "%\n")
+      curr.num.data <- curr.num.data + 1
+      cat("K Means Clustering: Dataset list =", i, "  dataset =", j, " -> ", round((curr.num.data/num.datasets)*100, 2),
+          "%  time: ", (proc.time() - start.time.SVM)[[3]]%/%60, "(m) ", round((proc.time() - start.time.SVM)[[3]]%%60, 3), "(s)\n")
       
       # save partial results
       partial.result.df <- rbind(partial.result.df, result)
@@ -119,9 +116,6 @@ MLKmeansClustering = function(dataset.lists, feature.selection.list, num.iter) {
     # save results
     KMeans.Clustering.df <- rbind(KMeans.Clustering.df, partial.result.df[1,])
   }
-  
-  # accuracy expressed on a 0 to 1 scale
-  KMeans.Clustering.df$AverageAccuracy <- KMeans.Clustering.df$AverageAccuracy/100
   
   # output a csv file
   write.csv(KMeans.Clustering.df, file = "KMeansClustering.csv")
