@@ -161,7 +161,7 @@ decisionTree = function(a.data, a.feature.list, a.num.iter, a.k, a.first.index, 
 # method which runs the Decision Tree algorithm on all datasets 
 MLDecisionTree = function(a.datasets.list, a.feature.list, a.num.iter, a.k) {
   
-  curr.num.data <- 1
+  curr.num.data <- 0
   
   # create decision tree data frame
   Decision.Tree.df <- data.frame(matrix(ncol = 6, nrow = 0))
@@ -172,16 +172,8 @@ MLDecisionTree = function(a.datasets.list, a.feature.list, a.num.iter, a.k) {
                                   "Avg.mce.kfolds", 
                                   "Formula")
   
-  
-  # simple data
-  curr.num.data <- 1
-  cat("Decision Tree: Dataset list =", 1, "  dataset =", 1, " -> ", round((curr.num.data/num.datasets)*100, 2), "%\n")
-  prediction.simple.data <- decisionTree(simple.data, a.feature.list, a.num.iter, a.k, 1, 1)
-  Decision.Tree.df <- rbind(Decision.Tree.df, prediction.simple.data)
-  Decision.Tree.df$Formula <- as.character(Decision.Tree.df$Formula)
-  
   # for in list of datasets
-  for(i in 2:length(a.datasets.list)) {
+  for(i in 1:length(a.datasets.list)) {
     
     datasets <- a.datasets.list[[i]]
     

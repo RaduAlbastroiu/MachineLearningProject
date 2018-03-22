@@ -103,7 +103,6 @@ naiveBayesClassifier = function(a.data, a.feature.list, a.num.iter, a.k, a.first
   
   for(i in 1:length(a.feature.list)) {
     
-    cat("Feature no.", i, "\n")
     # formula for this combination of features
     f <- as.formula(paste("C1Stress ~", paste(column.names[a.feature.list[[i]]][!column.names[a.feature.list[[i]]] %in% "C1Stress"], collapse = " + ")))
     
@@ -174,8 +173,9 @@ MLNaiveBayes = function(a.datasets.list, a.feature.list, a.num.iter, a.k) {
   # for in list of datasets
   for(i in 1:length(a.datasets.list)) {
 
-    if(i == 3)
-      next
+    # this dataset is not behaving well sometimes
+    #if(i == 3)
+    #  next
     
     datasets <- a.datasets.list[[i]]
 
