@@ -5,17 +5,17 @@ library(e1071)
 
 # tune and run svm
 # returns accuracy
-svmTuneRun = function(train, trainResult, test, testResult) {
+svmTuneRun = function(a.train, a.trainResult, a.test, a.testResult) {
   
   # train model
-  best.model <- tune(svm, train.x = train, train.y = trainResult, kernel = 'radial', ranges = list(cost = c(0.01,0.1,1,10,100), gamma = c(0.25, 0.5, 1, 2, 5, 10, 100)))
+  best.model <- tune(svm, train.x = a.train, train.y = a.trainResult, kernel = 'radial', ranges = list(cost = c(0.01,0.1,1,10,100), gamma = c(0.25, 0.5, 1, 2, 5, 10, 100)))
   best.model <- best.model$best.model
   
   # predict
-  pred <- predict(best.model, test)
+  pred <- predict(best.model, a.test)
   
   # compute accuracy
-  acc <- mean(pred == testResult)
+  acc <- mean(pred == a.testResult)
   
   # return accuracy
   return(acc)
@@ -26,27 +26,27 @@ svmTuneRun = function(train, trainResult, test, testResult) {
 # data name
 # acc for simple split
 # acc for k fold
-svmFeatureRun = function(data, feature.list, k, first.index, second.index, start.time.SVM) {
+svmFeatureRun = function(a.data, a.feature.list, a.k, a.first.index, a.second.index, a.start.time.SVM) {
   
   best.simple.split <- -10
   best.kfolds.split <- -10
   best.formula <- 'a'
   
-  for(i in 1:length(feature.list)) {
+  for(i in 1:length(a.feature.list)) {
     
     # split data on features
-    partial.data <- as.data.frame(data[,feature.list[[i]]])
-    partial.data$Result <- data$C1Stress
+    partial.data <- as.data.frame(a.data[,a.feature.list[[i]]])
+    partial.data$Result <- a.data$C1Stress
     
     # Simple Split data
     partial.results <- vector()
-    for(j in 1:k) {
+    for(j in 1:a.k) {
       # split data
       split.data <- dataSplit(partial.data, partial.data$Result, 0.7)
       
-      train.data <- split.data[[1]][1:length(feature.list[[i]])]
+      train.data <- split.data[[1]][1:length(a.feature.list[[i]])]
       train.data.result <- split.data[[1]]$Result
-      test.data <- split.data[[2]][1:length(feature.list[[i]])]
+      test.data <- split.data[[2]][1:length(a.feature.list[[i]])]
       test.data.result <- split.data[[2]]$Result
       
       partial.results[j] <- svmTuneRun(train.data, train.data.result, test.data, test.data.result)
@@ -55,15 +55,15 @@ svmFeatureRun = function(data, feature.list, k, first.index, second.index, start
     
     # K Folds data split
     partial.results <- vector()
-    data.split.list <- kFoldSplit(partial.data, k)
-    for(j in 1:k) {
+    data.split.list <- kFoldSplit(partial.data, a.k)
+    for(j in 1:a.k) {
       
       # select k fold
       split.data <- data.split.list[[j]]
       
-      train.data <- split.data[[1]][1:length(feature.list[[i]])]
+      train.data <- split.data[[1]][1:length(a.feature.list[[i]])]
       train.data.result <- split.data[[1]]$Result
-      test.data <- split.data[[2]][1:length(feature.list[[i]])]
+      test.data <- split.data[[2]][1:length(a.feature.list[[i]])]
       test.data.result <- split.data[[2]]$Result
       
       partial.results[j] <- svmTuneRun(train.data, train.data.result, test.data, test.data.result)
@@ -87,14 +87,14 @@ svmFeatureRun = function(data, feature.list, k, first.index, second.index, start
     
     
     # progress with time
-    cat(" - current feature comb num: ",i, " -> ", round((i/length(feature.list))*100, 2),  
+    cat(" - current feature comb num: ",i, " -> ", round((i/length(a.feature.list))*100, 2),  
         "%  time: ", (proc.time() - start.time.SVM)[[3]]%/%60, "(m) ", round((proc.time() - start.time.SVM)[[3]]%%60, 3), "(s)\n")
     
   }
   
   result.df <- data.frame(matrix(ncol = 4, nrow = 0))
   colnames(result.df) <- c("Dataset", "Avg.pred.data.split", "Avg.pred.kfolds", "Formula")
-  result.df[1,1] = datasetsNames(first.index, second.index)
+  result.df[1,1] = datasetsNames(a.first.index, a.second.index)
   result.df[1,2] = best.simple.split
   result.df[1,3] = best.kfolds.split
   result.df[1,4] = best.formula
@@ -104,7 +104,7 @@ svmFeatureRun = function(data, feature.list, k, first.index, second.index, start
 
 # run svm for a dataset list and a feature selection list
 # write a csv file with results of svm ml
-MLSVM = function(datasets.list, feature.list, k) { 
+MLSVM = function(a.datasets.list, a.feature.list, a.k) { 
   
   # start timing
   start.time.SVM <- proc.time()
@@ -116,10 +116,10 @@ MLSVM = function(datasets.list, feature.list, k) {
   colnames(SVM.df.results) <- c("Dataset", "Avg.pred.data.split", "Avg.pred.kfolds", "Formula")
   
   # run for all datasets
-  for(i in 1:length(datasets.list)) {
+  for(i in 1:length(a.datasets.list)) {
     
     # current dataset  
-    dataset.list <- datasets.list[[i]]
+    dataset.list <- a.datasets.list[[i]]
     
     # run for data
     partial.results.df <- data.frame(matrix(ncol = 4, nrow = 0))
@@ -134,7 +134,7 @@ MLSVM = function(datasets.list, feature.list, k) {
       dataset <- dataset.list[[j]]
       
       # run train
-      a <-  svmFeatureRun(dataset, feature.list, k, i, j, start.time.SVM)
+      a <-  svmFeatureRun(dataset, a.feature.list, a.k, i, j, start.time.SVM)
       partial.results.df <- rbind(partial.results.df, a)
     }
     
