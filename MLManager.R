@@ -10,7 +10,7 @@ source('FeatureSelection.R')
 
 # SVM
 source("Support Vector Machines.R")
-MLSVM(datasets.list = datasets.list, feature.selection.list = feature.selection.list[1:10], k = 5)
+MLSVM(datasets.list = datasets.list, feature.list = feature.selection.list[1:10], k = 5)
 
 # KMeans
 source("KMeansClustering.R")
