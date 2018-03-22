@@ -165,6 +165,10 @@ randForest = function(a.data, a.feature.list, a.num.iter, a.k, a.first.index, a.
 
 # method which runs the Random Forest algorithm on all datasets
 MLRandomForest = function(a.datasets.list, a.feature.list, a.num.iter, a.k) {
+  
+  # start timing
+  start.time <- proc.time()
+  
   curr.num.data <- 0
   
   # create decision tree data frame
@@ -195,7 +199,8 @@ MLRandomForest = function(a.datasets.list, a.feature.list, a.num.iter, a.k) {
       
       # progressometer
       curr.num.data <- curr.num.data + 1
-      cat("Random Forest: Dataset list =", i, "  dataset =", j, " -> ", round((curr.num.data/num.datasets)*100, 2), "%\n")
+      cat("Random Forest: Dataset list =", i, "  dataset =", j, " -> ", round((curr.num.data/num.datasets)*100, 2), 
+          "%  time: ", (proc.time() - start.time)[[3]]%/%60, "(m) ", round((proc.time() - start.time)[[3]]%%60, 3), "(s)\n")
       
       # train on dataset
       dataset <- datasets[[j]]

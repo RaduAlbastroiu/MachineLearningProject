@@ -147,7 +147,7 @@ MLSVM = function(a.datasets.list, a.feature.list, a.k) {
   }
   
   # write a csv
-  write.csv(SVM.df.results, file = "SupportVectorMachinesResult.csv")
+  write.csv(SVM.df.results, file = "SupportVectorMachinesResults.csv")
   
   # remove unnecesary data
   rm(start.time.SVM)

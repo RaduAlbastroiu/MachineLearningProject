@@ -74,7 +74,7 @@ trainAllKMeansFeaturesOnData = function(a.data, a.feature.list, a.num.iter, a.fi
 MLKmeansClustering = function(a.datasets.list, a.feature.list, a.num.iter) {
 
   # start timing
-  start.time.SVM <- proc.time()
+  start.time <- proc.time()
   
   curr.num.data <- 0
   cat("K Means Clustering: ", round((curr.num.data/num.datasets)*100, 2), "%\n")
@@ -105,7 +105,7 @@ MLKmeansClustering = function(a.datasets.list, a.feature.list, a.num.iter) {
       # print progress
       curr.num.data <- curr.num.data + 1
       cat("K Means Clustering: Dataset list =", i, "  dataset =", j, " -> ", round((curr.num.data/num.datasets)*100, 2),
-          "%  time: ", (proc.time() - start.time.SVM)[[3]]%/%60, "(m) ", round((proc.time() - start.time.SVM)[[3]]%%60, 3), "(s)\n")
+          "%  time: ", (proc.time() - start.time)[[3]]%/%60, "(m) ", round((proc.time() - start.time)[[3]]%%60, 3), "(s)\n")
       
       # save partial results
       partial.result.df <- rbind(partial.result.df, result)
@@ -118,6 +118,6 @@ MLKmeansClustering = function(a.datasets.list, a.feature.list, a.num.iter) {
   }
   
   # output a csv file
-  write.csv(KMeans.Clustering.df, file = "KMeansClustering.csv")
+  write.csv(KMeans.Clustering.df, file = "KMeansClusteringResults.csv")
 
 }
