@@ -2,7 +2,7 @@
 
 # train K Means on a data with specific columns
 # returns data frame
-trainKMeansOnData = function(a.data, a.result.column, a.num.iter, a.first.index, a.second.index, a.form) {
+trainKMeansOnData = function(a.data, a.result.column, a.num.iter, a.first.index, a.second.index, a.formula) {
   
   # store results
   acc.vec <- vector()
@@ -29,10 +29,14 @@ trainKMeansOnData = function(a.data, a.result.column, a.num.iter, a.first.index,
   }
   
   result.df <- data.frame(matrix(ncol = 3, nrow = 1))
-  result.df[1,1] <- datasetsNames(a.first.index, a.second.index)
-  result.df[1,2] <- mean(acc.vec)/nrow(a.data)
-  result.df[1,3] <- a.form
-  colnames(result.df) <- c("Dataset", "AverageAccuracy", "Formula")
+  result.df[1,1] <- "K Means Clustering"
+  result.df[1,2] <- datasetsNames(a.first.index, a.second.index)
+  result.df[1,3] <- round(mean(acc.vec)/nrow(a.data) * 100, 2)
+  result.df[1,4] <- a.formula
+  colnames(result.df) <- c("Algorithm",
+                           "Dataset", 
+                           "Average.acc", 
+                           "Formula")
   
   # return mean 
   return(result.df)
@@ -44,8 +48,11 @@ trainKMeansOnData = function(a.data, a.result.column, a.num.iter, a.first.index,
 trainAllKMeansFeaturesOnData = function(a.data, a.feature.list, a.num.iter, a.first.index, a.second.index) {
   
   # create result dataframe
-  result.df <- data.frame(matrix(ncol = 3, nrow = 0))
-  colnames(result.df) <- c("Dataset", "Accuracy", "Formula")
+  result.df <- data.frame(matrix(ncol = 4, nrow = 0))
+  colnames(result.df) <- c("Algorithm",
+                           "Dataset", 
+                           "Average.acc", 
+                           "Formula")
   
   # set result.column
   result.column <- a.data$C1Stress
@@ -64,7 +71,7 @@ trainAllKMeansFeaturesOnData = function(a.data, a.feature.list, a.num.iter, a.fi
   }
   
   
-  result.df <- result.df[order(result.df$AverageAccuracy, decreasing = TRUE), ]
+  result.df <- result.df[order(result.df$Average.acc, decreasing = TRUE), ]
   
   return(result.df[1,])
   
@@ -80,8 +87,11 @@ MLKmeansClustering = function(a.datasets.list, a.feature.list, a.num.iter) {
   cat("K Means Clustering: ", round((curr.num.data/num.datasets)*100, 2), "%\n")
   
   # create data frame for kmeans results
-  KMeans.Clustering.df <- data.frame(matrix(ncol = 3, nrow = 0))
-  colnames(KMeans.Clustering.df) <- c("Dataset", "AverageAccuracy", "Formula")
+  KMeans.Clustering.df <- data.frame(matrix(ncol = 4, nrow = 0))
+  colnames(KMeans.Clustering.df) <- c("Algorithm",
+                                      "Dataset", 
+                                      "Average.acc", 
+                                      "Formula")
   
   # start training on all datasets
   for(i in 1:length(a.datasets.list)) {
@@ -111,7 +121,7 @@ MLKmeansClustering = function(a.datasets.list, a.feature.list, a.num.iter) {
       partial.result.df <- rbind(partial.result.df, result)
     }
     
-    partial.result.df <- partial.result.df[order(partial.result.df$AverageAccuracy, decreasing = TRUE), ]
+    partial.result.df <- partial.result.df[order(partial.result.df$Average.acc, decreasing = TRUE), ]
     
     # save results
     KMeans.Clustering.df <- rbind(KMeans.Clustering.df, partial.result.df[1,])

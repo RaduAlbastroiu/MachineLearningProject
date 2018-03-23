@@ -144,8 +144,23 @@ trainPredictOnFeatures = function(a.data, a.feature.list, a.num.iter, a.k, a.fir
     }
   }
   
-  result.df <- data.frame(datasetsNames(a.first.index, a.second.index), mean(prediction.R2.simple.split), mean(prediction.R2.kfolds.split), mean(prediction.MSE.simple.split), mean(prediction.MSE.kfolds.split), as.character(Reduce(paste, deparse(best.formula))))
-  colnames(result.df) <- c("Dataset", "Avg.pred.data.split", "Avg.pred.kfolds", "Avg.mse.data.split", "Avg.mse.kfolds", "Formula")
+  result.df <- data.frame("Linear Regression",
+                          datasetsNames(a.first.index, a.second.index), 
+                          mean(prediction.R2.simple.split), 
+                          mean(prediction.R2.kfolds.split), 
+                          mean(prediction.MSE.simple.split), 
+                          mean(prediction.MSE.kfolds.split), 
+                          (mean(prediction.R2.simple.split) + mean(prediction.R2.kfolds.split))/2,
+                          as.character(Reduce(paste, deparse(best.formula))))
+  
+  colnames(result.df) <- c("Algorithm",
+                           "Dataset", 
+                           "Avg.pred.data.split", 
+                           "Avg.pred.kfolds", 
+                           "Avg.mse.data.split", 
+                           "Avg.mse.kfolds", 
+                           "Average.acc",
+                           "Formula")
   result.df$Formula <- as.character(result.df$Formula)
   
   return(result.df)
@@ -161,8 +176,15 @@ MLLinearRegression = function(a.datasets.list, a.feature.list, a.num.iter, a.k) 
   curr.num.data <- 0
   
   # create linear regression data frame
-  Linear.Regression.df <- data.frame(matrix(ncol = 6, nrow = 0))
-  colnames(Linear.Regression.df) <- c("Dataset", "Avg.pred.data.split", "Avg.pred.kfolds", "Avg.mse.data.split", "Avg.mse.kfolds", "Formula")
+  Linear.Regression.df <- data.frame(matrix(ncol = 8, nrow = 0))
+  colnames(Linear.Regression.df) <- c("Algorithm",
+                                      "Dataset", 
+                                      "Avg.pred.data.split", 
+                                      "Avg.pred.kfolds", 
+                                      "Avg.mse.data.split", 
+                                      "Avg.mse.kfolds", 
+                                      "Average.acc",
+                                      "Formula")
   
   
   # for in list of datasets
@@ -171,8 +193,15 @@ MLLinearRegression = function(a.datasets.list, a.feature.list, a.num.iter, a.k) 
     datasets <- a.datasets.list[[i]]
     
     # result 
-    result.df <- data.frame(matrix(ncol = 6, nrow = 0))
-    colnames(result.df) <- c("Dataset", "Avg.pred.data.split", "Avg.pred.kfolds", "Avg.mse.data.split", "Avg.mse.kfolds", "Formula")
+    result.df <- data.frame(matrix(ncol = 8, nrow = 0))
+    colnames(result.df) <- c("Algorithm",
+                             "Dataset", 
+                             "Avg.pred.data.split", 
+                             "Avg.pred.kfolds",
+                             "Avg.mse.data.split", 
+                             "Avg.mse.kfolds", 
+                             "Average.acc",
+                             "Formula")
     
     # for each dataset train and keep results
     for(j in 1:length(datasets)) {
@@ -188,10 +217,11 @@ MLLinearRegression = function(a.datasets.list, a.feature.list, a.num.iter, a.k) 
     }
     
     # compute average on column
-    result.df$Avg.pred.data.split <- mean(result.df$Avg.pred.data.split)
-    result.df$Avg.pred.kfolds <- mean(result.df$Avg.pred.kfolds)
-    result.df$Avg.mse.data.split <- mean(result.df$Avg.mse.data.split)
-    result.df$Avg.mse.kfolds <- mean(result.df$Avg.mse.kfolds)
+    result.df$Avg.pred.data.split <- round(mean(result.df$Avg.pred.data.split) * 100, 2)
+    result.df$Avg.pred.kfolds <- round(mean(result.df$Avg.pred.kfolds) * 100, 2)
+    result.df$Avg.mse.data.split <- round(mean(result.df$Avg.mse.data.split) * 100, 2)
+    result.df$Avg.mse.kfolds <- round(mean(result.df$Avg.mse.kfolds) * 100, 2)
+    result.df$Average.acc <- round((result.df$Avg.pred.data.split + result.df$Avg.pred.kfolds) / 2, 2)
     result.df$Formula <- rle(sort(result.df$Formula, decreasing = TRUE))[[2]][[1]]
     
     # add to final results
@@ -200,7 +230,6 @@ MLLinearRegression = function(a.datasets.list, a.feature.list, a.num.iter, a.k) 
   
   # output a csv file
   write.csv(Linear.Regression.df, file = "LinearRegressionResults.csv")
-
 }
 
 
