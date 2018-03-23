@@ -1,8 +1,0 @@
-"","Algorithm","Dataset","Average.acc","Formula"
-"2","K Means Clustering","simple data",60.8,"PSS_Score ~ ratio_good_decisions + signedSumofDegreesBetweenClicks"
-"1","K Means Clustering","Oversampled data",47.05,"PSS_Score ~ ratio_good_decisions"
-"3","K Means Clustering","Undersampled data",43.03,"PSS_Score ~ ratio_good_decisions + signedSumofDegreesBetweenClicks + num_decisions_made"
-"11","K Means Clustering","Hybrid data",46.6,"PSS_Score ~ ratio_good_decisions"
-"12","K Means Clustering","C1stress modif data",43.76,"PSS_Score ~ ratio_good_decisions"
-"31","K Means Clustering","Rose method dataset",43.35,"PSS_Score ~ ratio_good_decisions + signedSumofDegreesBetweenClicks + num_decisions_made"
-"21","K Means Clustering","Smote method dataset",44.91,"PSS_Score ~ ratio_good_decisions + signedSumofDegreesBetweenClicks"
