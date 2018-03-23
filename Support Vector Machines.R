@@ -79,7 +79,7 @@ svmFeatureRun = function(a.data, a.feature.list, a.k, a.first.index, a.second.in
       
       # compute best avg
       if(avg > old.avg) {
-        best.formula <- paste("PSS_Score ~", paste(column.names[feature.list[[i]]][!column.names[feature.list[[i]]] %in% "PSS_Score"], collapse = " + "))
+        best.formula <- paste("PSS_Score ~", paste(column.names[a.feature.list[[i]]][!column.names[a.feature.list[[i]]] %in% "PSS_Score"], collapse = " + "))
         best.kfolds.split <- kfold.split.result
         best.simple.split <- simple.split.result
       }
@@ -88,7 +88,7 @@ svmFeatureRun = function(a.data, a.feature.list, a.k, a.first.index, a.second.in
     
     # progress with time
     cat(" - current feature comb num: ",i, " -> ", round((i/length(a.feature.list))*100, 2),  
-        "%  time: ", (proc.time() - start.time.SVM)[[3]]%/%60, "(m) ", round((proc.time() - start.time.SVM)[[3]]%%60, 3), "(s)\n")
+        "%  time: ", (proc.time() - a.start.time.SVM)[[3]]%/%60, "(m) ", round((proc.time() - a.start.time.SVM)[[3]]%%60, 3), "(s)\n")
     
   }
   

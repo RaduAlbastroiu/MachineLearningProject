@@ -100,8 +100,8 @@ for(i in 1:length(datasets.list)) {
 
 rm(i)
 rm(simple.list, c1stress.modified.list)
-rm(normalized.simple.data, scaled.simple.data)
-rm(normalized.oversampled.datasets, scaled.oversampled.datasets)
-rm(normalized.undersampled.datasets, scaled.undersampled.datasets)
-rm(normalized.hybrid.datasets, scaled.hybrid.datasets)
+#rm(normalized.simple.data, scaled.simple.data)
+#rm(normalized.oversampled.datasets, scaled.oversampled.datasets)
+#rm(normalized.undersampled.datasets, scaled.undersampled.datasets)
+#rm(normalized.hybrid.datasets, scaled.hybrid.datasets)
 

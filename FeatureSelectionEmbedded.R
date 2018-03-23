@@ -83,9 +83,6 @@ featureSelLogRegression = function(data, num.features) {
 num.iterations <- 15
 for(i in 1:length(datasets.list)) {
   
-  # progress
-  cat("Feature Selection Embedded run number", i, " -> ", round((i/length(datasets.list))*100,2), "%\n")
-  
   datasets <- datasets.list[[i]]
   
   # for each dataset 
@@ -105,6 +102,9 @@ for(i in 1:length(datasets.list)) {
       feature.selection.list[[length(feature.selection.list) + 1]] <- log.regression.features
     }
   }
+  
+  # progress
+  cat("Feature Selection Embedded run number", i, " -> ", round((i/length(datasets.list))*100,2), "%\n")
 }
 
 
