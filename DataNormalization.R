@@ -2,11 +2,11 @@
 
 
 # normalize data
-normalizeData = function(data) {
+normalizeData = function(a.data) {
   
   # separate data
-  numeric.data <- data[,1:30]
-  non.numeric.data <- data[,31:32]
+  numeric.data <- a.data[,1:30]
+  non.numeric.data <- a.data[,31:32]
   
   # get min and max of each feature
   maxs <- apply(numeric.data, 2, max)
@@ -21,11 +21,11 @@ normalizeData = function(data) {
 }
 
 # scale data
-scaleData = function(data) {
+scaleData = function(a.data) {
   
   # separate data
-  numeric.data <- data[,1:30]
-  non.numeric.data <- data[,31:32]
+  numeric.data <- a.data[,1:30]
+  non.numeric.data <- a.data[,31:32]
   
   # normalized data
   scaled.data <- scale(numeric.data)
@@ -36,14 +36,14 @@ scaleData = function(data) {
 }
 
 # normalize a list of datasets
-normalizeDatasets = function(datasets) {
+normalizeDatasets = function(a.datasets) {
   
   # create normalized list of datasets
   normalized.datasets <- list()
   
-  for(i in 1:length(datasets)) {
+  for(i in 1:length(a.datasets)) {
     
-    data <- datasets[[i]]
+    data <- a.datasets[[i]]
       
     # normalize
     normalized.data <- normalizeData(data)
@@ -56,14 +56,14 @@ normalizeDatasets = function(datasets) {
 }
 
 # scale a list of datasets
-scaleDatasets = function(datasets) {
+scaleDatasets = function(a.datasets) {
   
   # create scaled list of datasets
   scaled.datasets <- list()
   
-  for(i in 1:length(datasets)) {
+  for(i in 1:length(a.datasets)) {
     
-    data <- datasets[[i]]
+    data <- a.datasets[[i]]
     
     # scale
     scaled.data <- scaleData(data)
@@ -78,23 +78,39 @@ scaleDatasets = function(datasets) {
 # data normalization
 
 # simple data normalized and scaled
-#normalized.simple.data <- normalizeData(simple.data)
-#scaled.simple.data <- scaleData(simple.data)
+normalized.simple.data <- normalizeData(simple.data)
+scaled.simple.data <- scaleData(simple.data)
+
+
+# C1Stress modified data normalized and scaled
+normalized.C1Stress.dataset <- normalizeData(C1Stress.modified.dataset)
+scaled.C1Stress.dataset <- scaleData(C1Stress.modified.dataset)
 
 
 # oversampled data normalized and scaled
-#normalized.oversampled.datasets <- normalizeDatasets(oversampled.datasets)
-#scaled.oversampled.datasets <- scaleDatasets(oversampled.datasets)
+normalized.oversampled.datasets <- normalizeDatasets(oversampled.datasets)
+scaled.oversampled.datasets <- scaleDatasets(oversampled.datasets)
 
 
 # undersampled data normalized and scaled
-#normalized.undersampled.datasets <- normalizeDatasets(undersampled.datasets)
-#scaled.undersampled.datasets <- scaleDatasets(undersampled.datasets)
+normalized.undersampled.datasets <- normalizeDatasets(undersampled.datasets)
+scaled.undersampled.datasets <- scaleDatasets(undersampled.datasets)
 
 
 # hybrid data normalized and scaled
-#normalized.hybrid.datasets <- normalizeDatasets(hybrid.datasets)
-#scaled.hybrid.datasets <- scaleDatasets(hybrid.datasets)
+normalized.hybrid.datasets <- normalizeDatasets(hybrid.datasets)
+scaled.hybrid.datasets <- scaleDatasets(hybrid.datasets)
+
+
+# Rose data normalized and scaled
+normalized.rose.datasets <- normalizeDatasets(rose.datasets)
+scaled.rose.datasets <- scaleDatasets(rose.datasets)
+
+
+# Smote data normalized and scaled
+normalized.smote.datasets <- normalizeDatasets(smote.datasets)
+scaled.smote.datasets <- scaleDatasets(smote.datasets)
+
 
 # remove residual variables
 rm(normalizeData, scaleData, normalizeDatasets, scaleDatasets)
