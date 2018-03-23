@@ -92,12 +92,20 @@ svmFeatureRun = function(a.data, a.feature.list, a.k, a.first.index, a.second.in
     
   }
   
-  result.df <- data.frame(matrix(ncol = 4, nrow = 0))
-  colnames(result.df) <- c("Dataset", "Avg.pred.data.split", "Avg.pred.kfolds", "Formula")
-  result.df[1,1] = datasetsNames(a.first.index, a.second.index)
-  result.df[1,2] = best.simple.split
-  result.df[1,3] = best.kfolds.split
-  result.df[1,4] = best.formula
+  result.df <- data.frame(matrix(ncol = 6, nrow = 0))
+  colnames(result.df) <- c("Algorithm",
+                           "Dataset", 
+                           "Avg.pred.data.split", 
+                           "Avg.pred.kfolds", 
+                           "Average.acc",
+                           "Formula")
+  
+  result.df[1,1] <- "Support Vector Machines"
+  result.df[1,2] <- datasetsNames(a.first.index, a.second.index)
+  result.df[1,3] <- best.simple.split
+  result.df[1,4] <- best.kfolds.split
+  result.df[1,5] <- (best.simple.split + best.kfolds.split) / 2
+  result.df[1,6] <- best.formula
 
   return(result.df)
 }
@@ -112,8 +120,13 @@ MLSVM = function(a.datasets.list, a.feature.list, a.k) {
   curr.num.data <- 0
   
   # create results df
-  SVM.df.results <- data.frame(matrix(ncol = 4, nrow = 0))
-  colnames(SVM.df.results) <- c("Dataset", "Avg.pred.data.split", "Avg.pred.kfolds", "Formula")
+  SVM.df.results <- data.frame(matrix(ncol = 6, nrow = 0))
+  colnames(SVM.df.results) <- c("Algorithm",
+                                "Dataset", 
+                                "Avg.pred.data.split", 
+                                "Avg.pred.kfolds", 
+                                "Average.acc",
+                                "Formula")
   
   # run for all datasets
   for(i in 1:length(a.datasets.list)) {
@@ -122,8 +135,13 @@ MLSVM = function(a.datasets.list, a.feature.list, a.k) {
     dataset.list <- a.datasets.list[[i]]
     
     # run for data
-    partial.results.df <- data.frame(matrix(ncol = 4, nrow = 0))
-    colnames(partial.results.df) <- c("Dataset", "Avg.pred.data.split", "Avg.pred.kfolds", "Formula")
+    partial.results.df <- data.frame(matrix(ncol = 6, nrow = 0))
+    colnames(partial.results.df) <- c("Algorithm",
+                                      "Dataset", 
+                                      "Avg.pred.data.split", 
+                                      "Avg.pred.kfolds", 
+                                      "Average.acc",
+                                      "Formula")
     for(j in 1:length(dataset.list)) {
       
       curr.num.data <- curr.num.data + 1
@@ -139,8 +157,9 @@ MLSVM = function(a.datasets.list, a.feature.list, a.k) {
     }
     
     partial.results.df[order(partial.results.df$Avg.pred.data.split, decreasing = TRUE), ]
-    partial.results.df$Avg.pred.data.split <- mean(partial.results.df$Avg.pred.data.split)
-    partial.results.df$Avg.pred.kfolds <- mean(partial.results.df$Avg.pred.kfolds)
+    partial.results.df$Avg.pred.data.split <- round(mean(partial.results.df$Avg.pred.data.split) * 100, 2)
+    partial.results.df$Avg.pred.kfolds <- round(mean(partial.results.df$Avg.pred.kfolds) * 100, 2)
+    partial.results.df$Average.acc <- round((partial.results.df$Avg.pred.data.split + partial.results.df$Avg.pred.kfolds)/2, 2)
     
     # bind to result
     SVM.df.results <- rbind(SVM.df.results, partial.results.df[1,])

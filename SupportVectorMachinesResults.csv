@@ -1,0 +1,3 @@
+"","Algorithm","Dataset","Avg.pred.data.split","Avg.pred.kfolds","Average.acc","Formula"
+"1","Support Vector Machines","simple data",77.78,76.9,77.34,"PSS_Score ~ ratio_good_decisions + signedSumofDegreesBetweenClicks"
+"2","Support Vector Machines","Oversampled data",96.51,96.71,96.61,"PSS_Score ~ ratio_good_decisions + signedSumofDegreesBetweenClicks"

@@ -10,8 +10,8 @@ source('FeatureSelection.R')
 
 # SVM
 source("Support Vector Machines.R")
-MLSVM(a.datasets.list = datasets.list, 
-      a.feature.list = feature.selection.list, 
+MLSVM(a.datasets.list = datasets.list[1:2], 
+      a.feature.list = feature.selection.list[1:2], 
       a.k = 5)
 
 # KMeans
@@ -51,6 +51,7 @@ MLRandomForest(a.datasets.list = datasets.list,
 # Naive Bayes
 source("Naive Bayes.R")
 MLNaiveBayes(a.datasets.list = datasets.list, 
-             a.feature.list = feature.selection.list[1:10], 
+             a.feature.list = feature.selection.list, 
              a.num.iter = 5, 
              a.k = 5)
+

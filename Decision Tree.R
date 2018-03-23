@@ -145,12 +145,22 @@ decisionTree = function(a.data, a.feature.list, a.num.iter, a.k, a.first.index, 
     }
   }
   
-  result.df <- data.frame(datasetsNames(a.first.index, a.second.index), mean(prediction.ACC.simple.split), mean(prediction.ACC.kfolds.split), mean(prediction.MCE.simple.split), mean(prediction.MCE.kfolds.split), as.character(Reduce(paste, deparse(best.formula))))
-  colnames(result.df) <- c("Dataset", 
+  result.df <- data.frame("Decision Trees",
+                          datasetsNames(a.first.index, a.second.index),
+                          mean(prediction.ACC.simple.split),
+                          mean(prediction.ACC.kfolds.split),
+                          mean(prediction.MCE.simple.split), 
+                          mean(prediction.MCE.kfolds.split),
+                          (mean(prediction.ACC.simple.split) + mean(prediction.ACC.kfolds.split))/2,
+                          as.character(Reduce(paste, deparse(best.formula))))
+  
+  colnames(result.df) <- c("Algorithm",
+                           "Dataset", 
                            "Avg.acc.data.split", 
                            "Avg.acc.kfolds", 
                            "Avg.mce.data.split", 
                            "Avg.mce.kfolds", 
+                           "Average.acc",
                            "Formula")
   result.df$Formula <- as.character(result.df$Formula)
   
@@ -167,12 +177,14 @@ MLDecisionTree = function(a.datasets.list, a.feature.list, a.num.iter, a.k) {
   curr.num.data <- 0
   
   # create decision tree data frame
-  Decision.Tree.df <- data.frame(matrix(ncol = 6, nrow = 0))
-  colnames(Decision.Tree.df) <- c("Dataset", 
+  Decision.Tree.df <- data.frame(matrix(ncol = 8, nrow = 0))
+  colnames(Decision.Tree.df) <- c("Algorithm",
+                                  "Dataset", 
                                   "Avg.acc.data.split", 
                                   "Avg.acc.kfolds", 
                                   "Avg.mce.data.split", 
                                   "Avg.mce.kfolds", 
+                                  "Average.acc",
                                   "Formula")
   
   # for in list of datasets
@@ -181,12 +193,14 @@ MLDecisionTree = function(a.datasets.list, a.feature.list, a.num.iter, a.k) {
     datasets <- a.datasets.list[[i]]
     
     # result
-    result.df <- data.frame(matrix(ncol = 6, nrow = 0))
-    colnames(result.df) <- c("Dataset", 
+    result.df <- data.frame(matrix(ncol = 8, nrow = 0))
+    colnames(result.df) <- c("Algorithm",
+                             "Dataset", 
                              "Avg.acc.data.split", 
                              "Avg.acc.kfolds",
                              "Avg.mce.data.split",
                              "Avg.mce.kfolds",
+                             "Average.acc",
                              "Formula")
     
     # for each dataset train and keep results
@@ -203,10 +217,11 @@ MLDecisionTree = function(a.datasets.list, a.feature.list, a.num.iter, a.k) {
     }
     
     # compute average on column
-    result.df$Avg.acc.data.split <- mean(result.df$Avg.acc.data.split)
-    result.df$Avg.acc.kfolds <- mean(result.df$Avg.acc.kfolds)
-    result.df$Avg.mce.data.split <- mean(result.df$Avg.mce.data.split)
-    result.df$Avg.mce.kfolds <- mean(result.df$Avg.mce.kfolds)
+    result.df$Avg.acc.data.split <- round(mean(result.df$Avg.acc.data.split) * 100, 2)
+    result.df$Avg.acc.kfolds <- round(mean(result.df$Avg.acc.kfolds) * 100, 2)
+    result.df$Avg.mce.data.split <- round(mean(result.df$Avg.mce.data.split) * 100, 2)
+    result.df$Avg.mce.kfolds <- round(mean(result.df$Avg.mce.kfolds) * 100, 2)
+    result.df$Average.acc <- round((result.df$Avg.acc.data.split + result.df$Avg.acc.kfolds) / 2, 2)
     result.df$Formula <- rle(sort(result.df$Formula, decreasing = TRUE))[[2]][[1]]
     
     # add to final results
