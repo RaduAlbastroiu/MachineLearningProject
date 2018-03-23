@@ -127,6 +127,9 @@ MLKmeansClustering = function(a.datasets.list, a.feature.list, a.num.iter) {
     KMeans.Clustering.df <- rbind(KMeans.Clustering.df, partial.result.df[1,])
   }
   
+  # add to global results
+  all.results <<- rbind(all.results, KMeans.Clustering.df)
+  
   # output a csv file
   write.csv(KMeans.Clustering.df, file = "KMeansClusteringResults.csv")
 

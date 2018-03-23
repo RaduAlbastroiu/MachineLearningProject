@@ -7,11 +7,15 @@ source('DataManager.R')
 source('FeatureSelection.R')
 
 # list of ML algorithms
-
+all.results <- data.frame((matrix(ncol = 4, nrow = 0)))
+colnames(all.results) <- c("Algorithm",
+                           "Dataset",
+                           "Average.acc",
+                           "Formula")
 # SVM
 source("Support Vector Machines.R")
-MLSVM(a.datasets.list = datasets.list[1:2], 
-      a.feature.list = feature.selection.list[1:2], 
+MLSVM(a.datasets.list = datasets.list, 
+      a.feature.list = feature.selection.list, 
       a.k = 5)
 
 # KMeans
@@ -55,3 +59,5 @@ MLNaiveBayes(a.datasets.list = datasets.list,
              a.num.iter = 5, 
              a.k = 5)
 
+# output a csv file
+write.csv(all.results, file = "AllResults.csv")

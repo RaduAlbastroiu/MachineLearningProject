@@ -228,6 +228,9 @@ MLDecisionTree = function(a.datasets.list, a.feature.list, a.num.iter, a.k) {
     Decision.Tree.df <- rbind(Decision.Tree.df, result.df[1,])
   }
   
+  # add to global results
+  all.results <<- rbind(all.results, Decision.Tree.df[c(1,2,7,8)])
+  
   # output a csv file
   write.csv(Decision.Tree.df, file = "DecisionTreeResults.csv")
 }

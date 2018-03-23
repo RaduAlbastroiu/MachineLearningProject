@@ -165,6 +165,9 @@ MLSVM = function(a.datasets.list, a.feature.list, a.k) {
     SVM.df.results <- rbind(SVM.df.results, partial.results.df[1,])
   }
   
+  # add to global results
+  all.results <<- rbind(all.results, SVM.df.results[c(1,2,5,6)])
+  
   # write a csv
   write.csv(SVM.df.results, file = "SupportVectorMachinesResults.csv")
   

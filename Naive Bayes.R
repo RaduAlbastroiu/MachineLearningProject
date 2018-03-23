@@ -230,6 +230,9 @@ MLNaiveBayes = function(a.datasets.list, a.feature.list, a.num.iter, a.k) {
     Naive.Bayes.df <- rbind(Naive.Bayes.df, result.df[1,])
   }
   
+  # add to global results
+  all.results <<- rbind(all.results, Naive.Bayes.df[c(1,2,7,8)])
+  
   # output a csv file
   write.csv(Naive.Bayes.df, file = "NaiveBayesResults.csv")
 }

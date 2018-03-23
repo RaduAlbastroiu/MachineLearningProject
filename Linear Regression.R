@@ -228,6 +228,9 @@ MLLinearRegression = function(a.datasets.list, a.feature.list, a.num.iter, a.k) 
     Linear.Regression.df <- rbind(Linear.Regression.df, result.df[1,])
   }
   
+  # add to global results
+  all.results <<- rbind(all.results, Linear.Regression.df[c(1,2,7,8)])
+  
   # output a csv file
   write.csv(Linear.Regression.df, file = "LinearRegressionResults.csv")
 }
