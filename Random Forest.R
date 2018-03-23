@@ -233,9 +233,6 @@ MLRandomForest = function(a.datasets.list, a.feature.list, a.num.iter, a.k) {
     Random.Forest.df <- rbind(Random.Forest.df, result.df[1,])
   }
   
-  # add to global results
-  all.results <<- rbind(all.results, Random.Forest.df[c(1,2,7,8)])
-  
   # output a csv file
   write.csv(Random.Forest.df, file = "RandomForestResults.csv")
 }
