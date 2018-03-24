@@ -68,6 +68,31 @@ kFoldSplit = function(data, k) {
 }
 
 
+# test k folds
+testKfoldsSplit = function(a.data, a.k, a.num.iter) {
+  
+  for(i in 1:a.num.iter) {
+    # split data
+    folds <- kFoldSplit(a.data, a.k)
+    
+    for(j in 1:length(folds)) {
+      one.fold <- folds[[j]]
+      
+      train <- one.fold[[1]]
+      test <- one.fold[[2]]
+      
+      #print(nrow(test))
+      
+      if(nrow(test) == 0)
+        return(FALSE)
+    }
+    
+    if(i%%1000 == 0)
+      cat(i, "\n")
+  }
+  return(TRUE)
+}
+
 
 
 
