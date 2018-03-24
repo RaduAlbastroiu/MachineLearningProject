@@ -208,7 +208,7 @@ MLLinearRegression = function(a.datasets.list, a.feature.list, a.num.iter, a.k) 
       
       # progressometer
       curr.num.data <- curr.num.data + 1
-      cat("Linear Regression: Dataset list =", i, "  dataset =", j, " -> ", round((curr.num.data/num.datasets)*100, 2),
+      cat("Linear Regression: Dataset", datasetsNames(i, j), "list =", i, "  dataset =", j, " -> ", round((curr.num.data/num.datasets)*100, 2),
           "%  time: ", (proc.time() - start.time)[[3]]%/%60, "(m) ", round((proc.time() - start.time)[[3]]%%60, 3), "(s)\n")
       
       # train on dataset

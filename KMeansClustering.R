@@ -114,7 +114,7 @@ MLKmeansClustering = function(a.datasets.list, a.feature.list, a.num.iter) {
       
       # print progress
       curr.num.data <- curr.num.data + 1
-      cat("K Means Clustering: Dataset list =", i, "  dataset =", j, " -> ", round((curr.num.data/num.datasets)*100, 2),
+      cat("K Means Clustering: Dataset", datasetsNames(i, j), "list =", i, "  dataset =", j, " -> ", round((curr.num.data/num.datasets)*100, 2),
           "%  time: ", (proc.time() - start.time)[[3]]%/%60, "(m) ", round((proc.time() - start.time)[[3]]%%60, 3), "(s)\n")
       
       # save partial results

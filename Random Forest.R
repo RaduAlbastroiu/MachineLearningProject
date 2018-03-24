@@ -21,9 +21,6 @@ randForestSimpleSplit = function(a.data, a.formula, a.split.ratio) {
   # train random forest model
   randForestModel <- randomForest(a.formula, train.data) 
   
-  # confusion matrix
-  confMatrix <- randForestModel$confusion
-  
   # predict
   predictions <- predict(randForestModel, test.data)
   
@@ -62,9 +59,6 @@ randForestKFoldsSplit = function(a.data, a.formula, a.k) {
     
     # train random forest model
     randForestModel <- randomForest(a.formula, train.data)
-    
-    # confusion matrix
-    confMatrix <- randForestModel$confusion
     
     # predict
     predictions <- predict(randForestModel, test.data)
@@ -213,7 +207,7 @@ MLRandomForest = function(a.datasets.list, a.feature.list, a.num.iter, a.k) {
       
       # progressometer
       curr.num.data <- curr.num.data + 1
-      cat("Random Forest: Dataset list =", i, "  dataset =", j, " -> ", round((curr.num.data/num.datasets)*100, 2), 
+      cat("Random Forest: Dataset", datasetsNames(i, j), "list =", i, "  dataset =", j, " -> ", round((curr.num.data/num.datasets)*100, 2), 
           "%  time: ", (proc.time() - start.time)[[3]]%/%60, "(m) ", round((proc.time() - start.time)[[3]]%%60, 3), "(s)\n")
       
       # train on dataset

@@ -30,7 +30,7 @@ MLLinearRegression(a.datasets.list = datasets.list,
 # Logistic Regression
 source("Logistic Regression.R")
 MLLogisticRegression(a.datasets.list = datasets.list, 
-                     a.feature.list = feature.selection.list[1:2], 
+                     a.feature.list = feature.selection.list, 
                      a.num.iter = 5, 
                      a.k = 5)
 
@@ -54,3 +54,5 @@ MLNaiveBayes(a.datasets.list = datasets.list,
              a.feature.list = feature.selection.list, 
              a.num.iter = 5, 
              a.k = 5)
+
+source("ResultsBinder.R")

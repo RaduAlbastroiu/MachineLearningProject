@@ -187,10 +187,6 @@ MLNaiveBayes = function(a.datasets.list, a.feature.list, a.num.iter, a.k) {
   
   # for in list of datasets
   for(i in 1:length(a.datasets.list)) {
-
-    # this dataset is not behaving well sometimes
-    # if(i == 3)
-    #   next
     
     datasets <- a.datasets.list[[i]]
 
@@ -210,7 +206,7 @@ MLNaiveBayes = function(a.datasets.list, a.feature.list, a.num.iter, a.k) {
 
       # progressometer
       curr.num.data <- curr.num.data + 1
-      cat("Naive Bayes: Dataset list =", i, "  dataset =", j, " -> ", round((curr.num.data/num.datasets)*100, 2),
+      cat("Naive Bayes: Dataset", datasetsNames(i, j), "list =", i, "  dataset =", j, " -> ", round((curr.num.data/num.datasets)*100, 2),
           "%  time: ", (proc.time() - start.time)[[3]]%/%60, "(m) ", round((proc.time() - start.time)[[3]]%%60, 3), "(s)\n")
 
       # train on dataset

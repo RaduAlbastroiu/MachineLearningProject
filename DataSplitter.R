@@ -40,7 +40,7 @@ kFoldSplit = function(data, k) {
   kfold.list <- list()
   
   # generate folds
-  for(i in 1:1000) {
+  for(i in 1:1000000) {
     
     # assign folds
     for(i in 1:nrow(data)) {
@@ -92,7 +92,3 @@ testKfoldsSplit = function(a.data, a.k, a.num.iter) {
   }
   return(TRUE)
 }
-
-
-
-
