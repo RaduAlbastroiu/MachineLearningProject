@@ -39,8 +39,17 @@ kFoldSplit = function(data, k) {
   vec <- vector()
   kfold.list <- list()
   
-  for(i in 1:nrow(data)) {
-    vec[i] <- sample(1:k, 1)
+  # generate folds
+  for(i in 1:1000) {
+    
+    # assign folds
+    for(i in 1:nrow(data)) {
+      vec[i] <- sample(1:k, 1)
+    }
+    
+    # to be sure every fold is generated
+    if(length(table(vec)) == k)
+      break
   }
   
   for(i in 1:k) {
