@@ -11,47 +11,47 @@ source('FeatureSelection.R')
 # SVM
 source("Support Vector Machines.R")
 MLSVM(a.datasets.list = datasets.list, 
-      a.feature.list = feature.selection.list, 
+      a.feature.list = feature.selection.list[1:10], 
       a.k = 5)
 
 # KMeans
 source("KMeansClustering.R")
 MLKmeansClustering(a.datasets.list = datasets.list, 
-                   a.feature.list = feature.selection.list, 
-                   a.num.iter = 10)
+                   a.feature.list = feature.selection.list[1:50], 
+                   a.num.iter = 50)
 
 # Linear Regression
 source("Linear Regression.R")
 MLLinearRegression(a.datasets.list = datasets.list, 
-                   a.feature.list = feature.selection.list, 
+                   a.feature.list = feature.selection.list[1:50], 
                    a.num.iter = 5, 
                    a.k = 5)
 
 # Logistic Regression
 source("Logistic Regression.R")
 MLLogisticRegression(a.datasets.list = datasets.list, 
-                     a.feature.list = feature.selection.list, 
+                     a.feature.list = feature.selection.list[1:50], 
                      a.num.iter = 5, 
                      a.k = 5)
 
 # Decision Tree
 source("Decision Tree.R")
 MLDecisionTree(a.datasets.list = datasets.list, 
-               a.feature.list = feature.selection.list, 
+               a.feature.list = feature.selection.list[1:50], 
                a.num.iter = 5, 
                a.k = 5)
 
 # Random Forest
 source("Random Forest.R")
 MLRandomForest(a.datasets.list = datasets.list, 
-               a.feature.list = feature.selection.list, 
+               a.feature.list = feature.selection.list[1:30], 
                a.num.iter = 5, 
                a.k = 5)
 
 # Naive Bayes
 source("Naive Bayes.R")
 MLNaiveBayes(a.datasets.list = datasets.list, 
-             a.feature.list = feature.selection.list, 
+             a.feature.list = feature.selection.list[1:30], 
              a.num.iter = 5, 
              a.k = 5)
 
