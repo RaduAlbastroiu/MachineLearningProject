@@ -64,7 +64,7 @@ trainAllKMeansFeaturesOnData = function(a.data, a.feature.list, a.num.iter, a.fi
     feature.data <- as.data.frame(a.data[,a.feature.list[[i]]])
     
     # create formula as character
-    form <- paste("PSS_Score ~", paste(column.names[a.feature.list[[i]]][!column.names[a.feature.list[[i]]] %in% "PSS_Score"], collapse = " + "))
+    form <- paste("C1Stress ~", paste(column.names[a.feature.list[[i]]][!column.names[a.feature.list[[i]]] %in% "PSS_Score"], collapse = " + "))
     
     # run training on the new dataset and put it in result dataframe
     result.df <- rbind(result.df, trainKMeansOnData(feature.data, result.column, a.num.iter, a.first.index, a.second.index, form))

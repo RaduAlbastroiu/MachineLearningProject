@@ -79,7 +79,7 @@ svmFeatureRun = function(a.data, a.feature.list, a.k, a.first.index, a.second.in
       
       # compute best avg
       if(avg > old.avg) {
-        best.formula <- paste("PSS_Score ~", paste(column.names[a.feature.list[[i]]][!column.names[a.feature.list[[i]]] %in% "PSS_Score"], collapse = " + "))
+        best.formula <- paste("C1Stress ~", paste(column.names[a.feature.list[[i]]][!column.names[a.feature.list[[i]]] %in% "PSS_Score"], collapse = " + "))
         best.kfolds.split <- kfold.split.result
         best.simple.split <- simple.split.result
       }

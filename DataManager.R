@@ -52,19 +52,19 @@ datasetsNames = function(first.index, second.index) {
   {
     if(first.index == 1) {
       if(second.index == 1)
-        return('simple data')
+        return('Simple data')
       if(second.index == 2)
-        return('normalized simple data')
+        return('Normalized simple data')
       if(second.index == 3)
-        return('scaled simple data')
+        return('Scaled simple data')
     }
     if(first.index == 2) {
       if(second.index == 1)
         return('C1Stress modified')
       if(second.index == 2)
-        return('normalized C1Stress modified')
+        return('Normalized C1Stress modified')
       if(second.index == 3)
-        return('scaled C1Stress modified')
+        return('Scaled C1Stress modified')
     }
   }
 }
