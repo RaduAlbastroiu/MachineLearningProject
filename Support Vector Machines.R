@@ -100,7 +100,7 @@ svmFeatureRun = function(a.data, a.feature.list, a.k, a.first.index, a.second.in
                            "Average.acc",
                            "Formula")
   
-  result.df[1,1] <- "Support Vector Machines"
+  result.df[1,1] <- "SVM"
   result.df[1,2] <- datasetsNames(a.first.index, a.second.index)
   result.df[1,3] <- best.simple.split
   result.df[1,4] <- best.kfolds.split

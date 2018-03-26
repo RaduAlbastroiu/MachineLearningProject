@@ -170,7 +170,7 @@ logRegression = function(a.data, a.feature.list, a.num.iter, a.k, a.first.index,
     }
   }
   
-  result.df <- data.frame("Logistic Regression",
+  result.df <- data.frame("LogReg",
                           datasetsNames(a.first.index, a.second.index), 
                           mean(prediction.ACC.simple.split), 
                           mean(prediction.ACC.kfolds.split), 

@@ -29,7 +29,7 @@ trainKMeansOnData = function(a.data, a.result.column, a.num.iter, a.first.index,
   }
   
   result.df <- data.frame(matrix(ncol = 3, nrow = 1))
-  result.df[1,1] <- "K Means Clustering"
+  result.df[1,1] <- "KMC"
   result.df[1,2] <- datasetsNames(a.first.index, a.second.index)
   result.df[1,3] <- round(mean(acc.vec)/nrow(a.data) * 100, 2)
   result.df[1,4] <- a.formula

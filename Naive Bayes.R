@@ -143,7 +143,7 @@ naiveBayesClassifier = function(a.data, a.feature.list, a.num.iter, a.k, a.first
     }
   }
   
-  result.df <- data.frame("Naive Bayes", 
+  result.df <- data.frame("NB", 
                           datasetsNames(a.first.index, a.second.index), 
                           mean(prediction.ACC.simple.split), 
                           mean(prediction.ACC.kfolds.split), 

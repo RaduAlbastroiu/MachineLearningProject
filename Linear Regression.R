@@ -144,7 +144,7 @@ trainPredictOnFeatures = function(a.data, a.feature.list, a.num.iter, a.k, a.fir
     }
   }
   
-  result.df <- data.frame("Linear Regression",
+  result.df <- data.frame("LinReg",
                           datasetsNames(a.first.index, a.second.index), 
                           mean(prediction.R2.simple.split), 
                           mean(prediction.R2.kfolds.split), 

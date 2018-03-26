@@ -9,7 +9,7 @@ library(ggplot2)
 
 
 results.dataset <- all.results
-levels(results.dataset$Algorithm) = c('SVM', 'KMC', 'DT', 'RF', 'NB')
+# levels(results.dataset$Algorithm) = c('SVM', 'KMC', 'DT', 'RF', 'NB')
 
 
 # plot dataset against algorithm with respect to accuracy
@@ -51,6 +51,10 @@ pl.acc.dataset.norm.hist <- ggplot(data = results.dataset.normalized, aes(x = Av
 pl.norm.boxplot <- ggplot(data = results.dataset.normalized, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc, fill = Dataset)) + 
   geom_boxplot(alpha = 0.5)
 
+# plot simple vs scaled vs normalized data for all algorithms
+pl.types.barplot <- ggplot(results.dataset.types, aes(Algorithm , Average.acc)) + 
+  geom_bar(stat="identity", aes(fill = Dataset), position = "dodge")
+
 
 # this dataset ignores the simple/norm/scaled labels
 results.dataset.method <- results.dataset
@@ -72,8 +76,6 @@ results.dataset.method$Dataset <- as.factor(results.dataset.method$Dataset)
 pl.method.boxplot <- ggplot(data = results.dataset.method, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc, fill = Dataset)) + 
   geom_boxplot(alpha = 0.5)
 
-
-
-
-
-
+# plot dataset types
+pl.method.barplot <- ggplot(results.dataset.method, aes(Algorithm, Average.acc)) + 
+  geom_bar(stat="identity", aes(fill = Dataset), position = "dodge")
