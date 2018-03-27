@@ -11,6 +11,9 @@ library(ggplot2)
 results.dataset <- all.results
 # levels(results.dataset$Algorithm) = c('SVM', 'KMC', 'DT', 'RF', 'NB')
 
+# plot algorithms on accuracy
+pl.alg.acc.boxplot <- ggplot(data = results.dataset, aes(x = reorder(Algorithm, Average.acc, FUN = median), y = Average.acc)) +
+  geom_boxplot(aes(fill = Algorithm), alpha = 0.5)
 
 # plot dataset against algorithm with respect to accuracy
 pl.dataset.alg.points <- ggplot(data = results.dataset, aes(x = Algorithm, y = Dataset)) + 
@@ -53,7 +56,7 @@ pl.norm.boxplot <- ggplot(data = results.dataset.normalized, aes(x = reorder(Dat
 
 
 # plot for each algorithm simple vs norm vs scaled
-data <- results.dataset.normalized[results.dataset.normalized$Algorithm == 'Support Vector Machines',]
+data <- results.dataset.normalized[results.dataset.normalized$Algorithm == 'SVM',]
 pl.SVM.type.barplot <- ggplot(data = data, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc)) + 
   geom_boxplot(color = "black", aes(fill = Dataset), alpha = 0.3)
 
@@ -61,11 +64,11 @@ data <- results.dataset.normalized[results.dataset.normalized$Algorithm == 'Deci
 pl.DT.type.barplot <- ggplot(data = data, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc)) + 
   geom_boxplot(color = "black", aes(fill = Dataset), alpha = 0.3)
 
-data <- results.dataset.normalized[results.dataset.normalized$Algorithm == 'Random Forest',]
+data <- results.dataset.normalized[results.dataset.normalized$Algorithm == 'RF',]
 pl.RF.type.barplot <- ggplot(data = data, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc)) + 
   geom_boxplot(color = "black", aes(fill = Dataset), alpha = 0.3)
 
-data <- results.dataset.normalized[results.dataset.normalized$Algorithm == 'Naive Bayes',]
+data <- results.dataset.normalized[results.dataset.normalized$Algorithm == 'NB',]
 pl.NB.type.barplot <- ggplot(data = data, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc)) + 
   geom_boxplot(color = "black", aes(fill = Dataset), alpha = 0.3)
 
@@ -75,7 +78,7 @@ results.dataset.method <- results.dataset
 {
 results.dataset.method$Dataset <- as.character(results.dataset.method$Dataset)
 
-results.dataset.method$Dataset[regexpr('simple', results.dataset.method$Dataset) > 0] <- 'Simple'
+results.dataset.method$Dataset[regexpr('Simple', results.dataset.method$Dataset) > 0] <- 'Simple'
 results.dataset.method$Dataset[regexpr('Oversampled', results.dataset.method$Dataset) > 0] <- 'Oversampled'
 results.dataset.method$Dataset[regexpr('Undersampled', results.dataset.method$Dataset) > 0] <- 'Undersampled'
 results.dataset.method$Dataset[regexpr('Hybrid', results.dataset.method$Dataset) > 0] <- 'Hybrid'
@@ -94,6 +97,22 @@ pl.method.boxplot <- ggplot(data = results.dataset.method, aes(x = reorder(Datas
 pl.alg.method.barplot <- ggplot(results.dataset.method, aes(Algorithm, Average.acc)) + 
   geom_bar(color = "black", stat="identity", aes(fill = Dataset), position = "dodge")
 
+# plot for each algorithm simple vs norm vs scaled
+data <- results.dataset.normalized[results.dataset.method$Algorithm == 'SVM',]
+pl.SVM.method.barplot <- ggplot(data = data, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc)) + 
+  geom_boxplot(color = "black", aes(fill = Dataset), alpha = 0.3)
+
+data <- results.dataset.normalized[results.dataset.method$Algorithm == 'Decision Trees',]
+pl.DT.method.barplot <- ggplot(data = data, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc)) + 
+  geom_boxplot(color = "black", aes(fill = Dataset), alpha = 0.3)
+
+data <- results.dataset.normalized[results.dataset.method$Algorithm == 'RF',]
+pl.RF.method.barplot <- ggplot(data = data, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc)) + 
+  geom_boxplot(color = "black", aes(fill = Dataset), alpha = 0.3)
+
+data <- results.dataset.normalized[results.dataset.method$Algorithm == 'NB',]
+pl.NB.method.barplot <- ggplot(data = data, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc)) + 
+  geom_boxplot(color = "black", aes(fill = Dataset), alpha = 0.3)
 
 
 
