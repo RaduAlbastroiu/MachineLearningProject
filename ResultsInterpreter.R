@@ -51,9 +51,23 @@ pl.acc.dataset.norm.hist <- ggplot(data = results.dataset.normalized, aes(x = Av
 pl.norm.boxplot <- ggplot(data = results.dataset.normalized, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc, fill = Dataset)) + 
   geom_boxplot(alpha = 0.5)
 
-# plot simple vs scaled vs normalized data for all algorithms
-pl.types.barplot <- ggplot(results.dataset.types, aes(Algorithm , Average.acc)) + 
-  geom_bar(stat="identity", aes(fill = Dataset), position = "dodge")
+
+# plot for each algorithm simple vs norm vs scaled
+data <- results.dataset.normalized[results.dataset.normalized$Algorithm == 'Support Vector Machines',]
+pl.SVM.type.barplot <- ggplot(data = data, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc)) + 
+  geom_boxplot(color = "black", aes(fill = Dataset), alpha = 0.3)
+
+data <- results.dataset.normalized[results.dataset.normalized$Algorithm == 'Decision Trees',]
+pl.DT.type.barplot <- ggplot(data = data, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc)) + 
+  geom_boxplot(color = "black", aes(fill = Dataset), alpha = 0.3)
+
+data <- results.dataset.normalized[results.dataset.normalized$Algorithm == 'Random Forest',]
+pl.RF.type.barplot <- ggplot(data = data, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc)) + 
+  geom_boxplot(color = "black", aes(fill = Dataset), alpha = 0.3)
+
+data <- results.dataset.normalized[results.dataset.normalized$Algorithm == 'Naive Bayes',]
+pl.NB.type.barplot <- ggplot(data = data, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc)) + 
+  geom_boxplot(color = "black", aes(fill = Dataset), alpha = 0.3)
 
 
 # this dataset ignores the simple/norm/scaled labels
@@ -77,5 +91,9 @@ pl.method.boxplot <- ggplot(data = results.dataset.method, aes(x = reorder(Datas
   geom_boxplot(alpha = 0.5)
 
 # plot dataset types
-pl.method.barplot <- ggplot(results.dataset.method, aes(Algorithm, Average.acc)) + 
-  geom_bar(stat="identity", aes(fill = Dataset), position = "dodge")
+pl.alg.method.barplot <- ggplot(results.dataset.method, aes(Algorithm, Average.acc)) + 
+  geom_bar(color = "black", stat="identity", aes(fill = Dataset), position = "dodge")
+
+
+
+
