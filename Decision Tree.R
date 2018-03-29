@@ -145,7 +145,7 @@ decisionTree = function(a.data, a.feature.list, a.num.iter, a.k, a.first.index, 
     }
   }
   
-  result.df <- data.frame("Decision Trees",
+  result.df <- data.frame("DT",
                           datasetsNames(a.first.index, a.second.index),
                           mean(prediction.ACC.simple.split),
                           mean(prediction.ACC.kfolds.split),

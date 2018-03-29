@@ -98,19 +98,19 @@ pl.alg.method.barplot <- ggplot(results.dataset.method, aes(Algorithm, Average.a
   geom_bar(color = "black", stat="identity", aes(fill = Dataset), position = "dodge")
 
 # plot for each algorithm simple vs norm vs scaled
-data <- results.dataset.normalized[results.dataset.method$Algorithm == 'SVM',]
+data <- results.dataset.method[results.dataset.method$Algorithm == 'SVM',]
 pl.SVM.method.barplot <- ggplot(data = data, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc)) + 
   geom_boxplot(color = "black", aes(fill = Dataset), alpha = 0.3)
 
-data <- results.dataset.normalized[results.dataset.method$Algorithm == 'Decision Trees',]
+data <- results.dataset.method[results.dataset.method$Algorithm == 'Decision Trees',]
 pl.DT.method.barplot <- ggplot(data = data, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc)) + 
   geom_boxplot(color = "black", aes(fill = Dataset), alpha = 0.3)
 
-data <- results.dataset.normalized[results.dataset.method$Algorithm == 'RF',]
+data <- results.dataset.method[results.dataset.method$Algorithm == 'RF',]
 pl.RF.method.barplot <- ggplot(data = data, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc)) + 
   geom_boxplot(color = "black", aes(fill = Dataset), alpha = 0.3)
 
-data <- results.dataset.normalized[results.dataset.method$Algorithm == 'NB',]
+data <- results.dataset.method[results.dataset.method$Algorithm == 'NB',]
 pl.NB.method.barplot <- ggplot(data = data, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc)) + 
   geom_boxplot(color = "black", aes(fill = Dataset), alpha = 0.3)
 

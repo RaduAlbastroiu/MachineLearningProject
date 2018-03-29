@@ -17,8 +17,8 @@ MLSVM(a.datasets.list = datasets.list,
 # KMeans
 source("KMeansClustering.R")
 MLKmeansClustering(a.datasets.list = datasets.list, 
-                   a.feature.list = feature.selection.list[1:50], 
-                   a.num.iter = 50)
+                   a.feature.list = feature.selection.list[1:100], 
+                   a.num.iter = 100)
 
 # Linear Regression
 source("Linear Regression.R")
@@ -44,14 +44,14 @@ MLDecisionTree(a.datasets.list = datasets.list,
 # Random Forest
 source("Random Forest.R")
 MLRandomForest(a.datasets.list = datasets.list, 
-               a.feature.list = feature.selection.list[1:30], 
+               a.feature.list = feature.selection.list[1:20], 
                a.num.iter = 5, 
                a.k = 5)
 
 # Naive Bayes
 source("Naive Bayes.R")
 MLNaiveBayes(a.datasets.list = datasets.list, 
-             a.feature.list = feature.selection.list[1:30], 
+             a.feature.list = feature.selection.list[1:50], 
              a.num.iter = 5, 
              a.k = 5)
 
