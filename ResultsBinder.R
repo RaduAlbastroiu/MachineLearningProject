@@ -10,16 +10,16 @@ SVM.df <- read.csv(file = "SupportVectorMachinesResults.csv", header = T)
 all.results <- rbind(all.results, SVM.df[c(2, 3, 6, 7)])
 
 #add k means to results
-KMeansClustering.df <- read.csv(file = "KMeansClusteringResults.csv", header = T)
-all.results <- rbind(all.results, KMeansClustering.df[2:5])
+#KMeansClustering.df <- read.csv(file = "KMeansClusteringResults.csv", header = T)
+#all.results <- rbind(all.results, KMeansClustering.df[2:5])
 
 # add linear regression to results
-LinearRegression.df <- read.csv(file = "LinearRegressionResults.csv", header = T)
-all.results <- rbind(all.results, LinearRegression.df[c(2, 3, 8, 9)])
+#LinearRegression.df <- read.csv(file = "LinearRegressionResults.csv", header = T)
+#all.results <- rbind(all.results, LinearRegression.df[c(2, 3, 8, 9)])
 
 # add logistic regression to results
-LogisticRegression.df <- read.csv(file = "LogisticRegressionResults.csv", header = T)
-all.results <- rbind(all.results, LogisticRegression.df[c(2, 3, 8, 9)])
+#LogisticRegression.df <- read.csv(file = "LogisticRegressionResults.csv", header = T)
+#all.results <- rbind(all.results, LogisticRegression.df[c(2, 3, 8, 9)])
 
 # add decision tree to results
 DecisionTree.df <- read.csv(file = "DecisionTreeResults.csv", header = T)

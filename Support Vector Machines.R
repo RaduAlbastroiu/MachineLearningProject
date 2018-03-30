@@ -8,7 +8,9 @@ library(e1071)
 svmTuneRun = function(a.train, a.trainResult, a.test, a.testResult) {
   
   # train model
-  best.model <- tune(svm, train.x = a.train, train.y = a.trainResult, kernel = 'radial', ranges = list(cost = c(0.01,0.1,1,10,100), gamma = c(0.25, 0.5, 1, 2, 5, 10, 100)))
+  best.model <- tune(svm, train.x = a.train, train.y = a.trainResult, kernel = 'radial', ranges = list(cost = c(1.5), gamma = c(0.3)))
+  #cat("cost",best.model$best.parameters[[1]], " gamma", best.model$best.parameters[[2]], "\n")
+
   best.model <- best.model$best.model
   
   # predict
@@ -87,8 +89,8 @@ svmFeatureRun = function(a.data, a.feature.list, a.k, a.first.index, a.second.in
     
     
     # progress with time
-    cat(" - current feature comb num: ",i, " -> ", round((i/length(a.feature.list))*100, 2),  
-        "%  time: ", (proc.time() - a.start.time.SVM)[[3]]%/%60, "(m) ", round((proc.time() - a.start.time.SVM)[[3]]%%60, 3), "(s)\n")
+    #cat(" - current feature comb num: ",i, " -> ", round((i/length(a.feature.list))*100, 2),  
+    #    "%  time: ", (proc.time() - a.start.time.SVM)[[3]]%/%60, "(m) ", round((proc.time() - a.start.time.SVM)[[3]]%%60, 3), "(s)\n")
     
   }
   

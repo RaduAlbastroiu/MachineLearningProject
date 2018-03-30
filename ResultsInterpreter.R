@@ -1,7 +1,7 @@
 # Plotting and interpretting results
 
 # run results binder
-source('ResultsBinder.R')
+#source('ResultsBinder.R')
 
 
 # libraries
@@ -10,6 +10,11 @@ library(ggplot2)
 
 results.dataset <- all.results
 # levels(results.dataset$Algorithm) = c('SVM', 'KMC', 'DT', 'RF', 'NB')
+
+avgSVM <- mean(results.dataset$Average.acc[results.dataset$Algorithm == 'SVM'])
+avgRF <- mean(results.dataset$Average.acc[results.dataset$Algorithm == 'RF'])
+avgDT <- mean(results.dataset$Average.acc[results.dataset$Algorithm == 'DT'])
+avgNB <- mean(results.dataset$Average.acc[results.dataset$Algorithm == 'NB'])
 
 # plot algorithms on accuracy
 pl.alg.acc.boxplot <- ggplot(data = results.dataset, aes(x = reorder(Algorithm, Average.acc, FUN = median), y = Average.acc)) +
@@ -60,7 +65,7 @@ data <- results.dataset.normalized[results.dataset.normalized$Algorithm == 'SVM'
 pl.SVM.type.barplot <- ggplot(data = data, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc)) + 
   geom_boxplot(color = "black", aes(fill = Dataset), alpha = 0.3)
 
-data <- results.dataset.normalized[results.dataset.normalized$Algorithm == 'Decision Trees',]
+data <- results.dataset.normalized[results.dataset.normalized$Algorithm == 'DT',]
 pl.DT.type.barplot <- ggplot(data = data, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc)) + 
   geom_boxplot(color = "black", aes(fill = Dataset), alpha = 0.3)
 
@@ -102,7 +107,7 @@ data <- results.dataset.method[results.dataset.method$Algorithm == 'SVM',]
 pl.SVM.method.barplot <- ggplot(data = data, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc)) + 
   geom_boxplot(color = "black", aes(fill = Dataset), alpha = 0.3)
 
-data <- results.dataset.method[results.dataset.method$Algorithm == 'Decision Trees',]
+data <- results.dataset.method[results.dataset.method$Algorithm == 'DT',]
 pl.DT.method.barplot <- ggplot(data = data, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc)) + 
   geom_boxplot(color = "black", aes(fill = Dataset), alpha = 0.3)
 
