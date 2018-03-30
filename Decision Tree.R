@@ -19,7 +19,8 @@ decisionTreeSimpleSplit = function(a.data, a.formula, a.split.ratio) {
   test.data <- temp.list[[2]]
   
   # build tree
-  tree <- rpart(a.formula, method = 'class', data = train.data)
+  tree <- rpart(a.formula, method = 'class', data = train.data, 
+                minsplit = 7, minbucket = 1, cp = 0.007, surrogatestyle = 1)
   
   # predict
   predictions <- predict(tree, type = "class", test.data)
@@ -58,7 +59,8 @@ decisionTreeKFoldsSplit = function(a.data, a.formula, a.k) {
     test.data <- oneFold[[2]]
     
     # build tree
-    tree <- rpart(a.formula, method = 'class', data = train.data)
+    tree <- rpart(a.formula, method = 'class', data = train.data, 
+                  minsplit = 7, minbucket = 1, cp = 0.007, surrogatestyle = 1)
   
     # predict
     predictions <- predict(tree, type = "class", test.data)
