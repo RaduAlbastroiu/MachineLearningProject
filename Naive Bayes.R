@@ -16,8 +16,8 @@ naiveBayesSimpleSplit = function(a.data, a.formula, a.split.ratio) {
   train.data <- temp.list[[1]]
   test.data <- temp.list[[2]]
   
-  # build tree
-  model <- naiveBayes(a.formula, data = train.data)
+  # build model
+  model <- naiveBayes(a.formula, data = train.data, eps = 10, laplace = 0.1)
   
   # predict
   predictions <- predict(model, test.data, type = "class")
@@ -55,8 +55,8 @@ naiveBayesKFoldsSplit = function(a.data, a.formula, a.k) {
     train.data <- oneFold[[1]]
     test.data <- oneFold[[2]]
     
-    # build tree
-    model <- naiveBayes(a.formula, data = train.data)
+    # build model
+    model <- naiveBayes(a.formula, data = train.data, eps = 10, laplace = 0.1)
     
     # predict
     predictions <- predict(model, test.data, type = "class")
