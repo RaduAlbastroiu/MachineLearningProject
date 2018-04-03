@@ -4,52 +4,214 @@ library(neuralnet)
 library(nnet)
 library(ggplot2)
 
-best.acc <- 0
-best.iter <- 0
-all.acc <- vector()
-
-iter <- 27
-for(j in 1:25) {
-  # formula
-  f <- as.formula(paste("lowStress + moderateStress + highStress ~", paste(column.names[a.feature.list[[iter]]][!column.names[a.feature.list[[iter]]] %in% "C1Stress"], collapse = " + ")))
+neuralNetworkSimpleSplit = function(a.data, a.formula, a.feature.combination, a.split.ratio) {
   
-  # data
-  d <- datasets.list[[1]]
-  d <- d[[1]]
-  d <- dataSplit(d, d$C1Stress, 0.7)
+  a.data <- a.data[, !colnames(a.data) %in% c("PSS_Score", "C2Stress")]
   
-  train <- d[[1]]
-  train <- cbind(train[, 3:30], class.ind(train$C1Stress))
-  test <- d[[2]]
+  # split data
+  temp.list <- dataSplit(a.data, a.data$C1Stress, a.split.ratio)
+  train.data <- temp.list[[1]]
+  test.data <- temp.list[[2]]
   
+  # split result labels into separate columns
+  train.data <- cbind(train.data, class.ind(train.data$C1Stress))
   
-  # fit the model
-  nn <- neuralnet(f,
-                  data = train,
+  # train the neural network
+  nn <- neuralnet(a.formula,
+                  data = train.data,
                   hidden = 10,
-                  linear.output = F)
+                  linear.output = FALSE)
   
-  a <- compute(nn, test[,a.feature.list[[iter]]])$net.result
+  # predict
+  row.predictions <- compute(nn, test.data[,a.feature.combination])$net.result
   
-  b <- vector()
-  for(i in 1:nrow(test)) {
+  # merge row predictions into one
+  predictions <- vector()
+  for(i in 1:nrow(test.data)) {
     
-    if(a[i,1] > a[i,2] && a[i,1] > a[i,3]) {
-      b[i] <- 'lowStress'
+    if(row.predictions[i,1] > row.predictions[i,2] && row.predictions[i,1] > row.predictions[i,3]) {
+      predictions[i] <- 'lowStress'
     }
     
-    if(a[i,2] > a[i,1] && a[i,2] > a[i,3]) {
-      b[i] <- 'moderateStress'
+    if(row.predictions[i,2] > row.predictions[i,1] && row.predictions[i,2] > row.predictions[i,3]) {
+      predictions[i] <- 'moderateStress'
     }
     
-    if(a[i,3] > a[i,2] && a[i,3] > a[i,2]) {
-      b[i] <- 'highStress'
+    if(row.predictions[i,3] > row.predictions[i,2] && row.predictions[i,3] > row.predictions[i,2]) {
+      predictions[i] <- 'highStress'
     }
   }
   
-  acc <- mean(test$C1Stress == b) 
-  all.acc[j] <- acc
+  accuracy <- mean(test.data$C1Stress == predictions)
+  
+  return(accuracy)
 }
 
-print(mean(all.acc))
-plot(nn)
+neuralNetworkKFoldsSplit = function(a.data, a.formula, a.feature.combination, a.k) {
+  
+  a.data <- a.data[, !colnames(a.data) %in% c("PSS_Score", "C2Stress")]
+  
+  # split data
+  folds <- kFoldSplit(a.data, a.k)
+  
+  accuracy.vec <- vector()
+  
+  for (i in a.k) {
+    oneFold <- folds[[i]]
+    
+    train.data <- oneFold[[1]]
+    test.data <- oneFold[[2]]
+    
+    # split result labels into separate columns
+    train.data <- cbind(train.data, class.ind(train.data$C1Stress))
+    
+    # train the neural network
+    nn <- neuralnet(a.formula,
+                    data = train.data,
+                    hidden = 10,
+                    linear.output = FALSE)
+    
+    # predict
+    row.predictions <- compute(nn, test.data[,a.feature.combination])$net.result
+    
+    # merge row predictions into one
+    predictions <- vector()
+    for(i in 1:nrow(test.data)) {
+      
+      if(row.predictions[i,1] > row.predictions[i,2] && row.predictions[i,1] > row.predictions[i,3]) {
+        predictions[i] <- 'lowStress'
+      }
+      
+      if(row.predictions[i,2] > row.predictions[i,1] && row.predictions[i,2] > row.predictions[i,3]) {
+        predictions[i] <- 'moderateStress'
+      }
+      
+      if(row.predictions[i,3] > row.predictions[i,2] && row.predictions[i,3] > row.predictions[i,2]) {
+        predictions[i] <- 'highStress'
+      }
+    }
+    
+    # compute accuracy 
+    accuracy <- mean(test.data$C1Stress == predictions)
+    
+    # add accuracy to vector
+    accuracy.vec[length(accuracy.vec) + 1] <- accuracy
+  }
+  
+  return(mean(accuracy.vec))
+}
+
+
+neuralNetwork = function(a.data, a.feature.list, a.num.iter, a.k, a.first.index, a.second.index) {
+  
+  # store all results
+  prediction.acc.simple.split <- vector()
+  prediction.acc.kfolds.split <- vector()
+  
+  best.prediction <- -100000
+  best.formula <- vector
+  
+  for(i in 1:length(a.feature.list)) {
+    
+    # formula for this combination of features
+    f <- as.formula(paste("lowStress + moderateStress + highStress ~", paste(column.names[a.feature.list[[i]]][!column.names[a.feature.list[[i]]] %in% "C1Stress"], collapse = " + ")))
+    
+    # for each run
+    for(j in 1:a.num.iter) {
+      
+      acc.vec <- vector()
+      
+      for(z in 1:a.k) {
+        acc <- neuralNetworkSimpleSplit(a.data, f, a.feature.list[[i]], 0.7)
+        
+        acc.vec[length(acc.vec) + 1] <- acc
+      }
+      
+      prediction.acc.simple.split <- mean(acc.vec)
+      
+      acc.kfolds <- neuralNetworkKFoldsSplit(a.data, f, a.feature.list[[i]], a.k)
+      prediction.acc.kfolds.split <- acc.kfolds
+      
+      meanPred <- (prediction.acc.simple.split[j] + prediction.acc.kfolds.split[j]) / 2
+      if(is.na(meanPred) == FALSE & is.na(best.prediction) == FALSE) {
+        if(meanPred > best.prediction) {
+          best.prediction <- meanPred
+          best.formula <- f
+        }
+      }
+    }
+  }
+  
+  result.df <- data.frame("NN",
+                          datasetsNames(a.first.index, a.second.index), 
+                          mean(prediction.acc.simple.split),
+                          mean(prediction.acc.kfolds.split),
+                          (mean(prediction.acc.simple.split) + mean(prediction.acc.kfolds.split))/2,
+                          as.character(Reduce(paste, deparse(best.formula))))
+  
+  colnames(result.df) <- c("Algorithm",
+                           "Dataset", 
+                           "Avg.acc.data.split", 
+                           "Avg.acc.kfolds", 
+                           "Average.acc",
+                           "Formula")
+  result.df$Formula <- as.character(result.df$Formula)
+  
+  return(result.df)
+}
+
+MLNeuralNetwork = function(a.datasets.list, a.feature.list, a.num.iter, a.k) {
+  # start timing
+  start.time <- proc.time()
+  
+  curr.num.data <- 0
+  
+  # create decision tree data frame
+  Neural.Network.df <- data.frame(matrix(ncol = 6, nrow = 0))
+  colnames(Neural.Network.df) <- c("Algorithm",
+                                   "Dataset", 
+                                   "Avg.acc.data.split", 
+                                   "Avg.acc.kfolds", 
+                                   "Average.acc",
+                                   "Formula")
+  
+  # for in list of datasets
+  for(i in 1:length(a.datasets.list)) {
+    
+    datasets <- a.datasets.list[[i]]
+    
+    # result
+    result.df <- data.frame(matrix(ncol = 6, nrow = 0))
+    colnames(result.df) <- c("Algorithm",
+                             "Dataset", 
+                             "Avg.acc.data.split", 
+                             "Avg.acc.kfolds", 
+                             "Average.acc",
+                             "Formula")
+    
+    # for each dataset train and keep results
+    for(j in 1:length(datasets)) {
+      
+      # progressometer
+      curr.num.data <- curr.num.data + 1
+      cat("Neural Network: Dataset", datasetsNames(i, j), "list =", i, "  dataset =", j, " -> ", round((curr.num.data/num.datasets)*100, 2), 
+          "%  time: ", (proc.time() - start.time)[[3]]%/%60, "(m) ", round((proc.time() - start.time)[[3]]%%60, 3), "(s)\n")
+      
+      # train on dataset
+      dataset <- datasets[[j]]
+      result.df <- rbind(result.df, neuralNetwork(dataset, a.feature.list, a.num.iter, a.k, i, j))
+    }
+    # compute average on column
+    result.df$Avg.acc.data.split <- round(mean(result.df$Avg.acc.data.split) * 100, 2)
+    result.df$Avg.acc.kfolds <- round(mean(result.df$Avg.acc.kfolds) * 100, 2)
+    result.df$Average.acc <- round((result.df$Avg.acc.data.split + result.df$Avg.acc.kfolds) / 2, 2)
+    result.df$Formula <- rle(sort(result.df$Formula, decreasing = TRUE))[[2]][[1]]
+    
+    # add to final results
+    Neural.Network.df <- rbind(Neural.Network.df, result.df[1,])
+  }
+  
+  # output a csv file
+  write.csv(Neural.Network.df, file = "NeuralNetworkResults.csv")
+  
+}

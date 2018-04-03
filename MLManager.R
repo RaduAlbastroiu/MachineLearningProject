@@ -55,4 +55,10 @@ MLNaiveBayes(a.datasets.list = datasets.list,
              a.num.iter = 5, 
              a.k = 5)
 
+source("NeuralNetworks.R")
+MLNeuralNetwork(a.datasets.list = datasets.list, 
+             a.feature.list = feature.selection.list[1:100], 
+             a.num.iter = 5, 
+             a.k = 5)
+
 source("ResultsBinder.R")
