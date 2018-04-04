@@ -5,9 +5,7 @@ library(nnet)
 library(ggplot2)
 
 neuralNetworkSimpleSplit = function(a.data, a.formula, a.feature.combination, a.split.ratio) {
-  
-  a.data <- a.data[, !colnames(a.data) %in% c("PSS_Score", "C2Stress")]
-  
+
   # split data
   temp.list <- dataSplit(a.data, a.data$C1Stress, a.split.ratio)
   train.data <- temp.list[[1]]
@@ -21,8 +19,8 @@ neuralNetworkSimpleSplit = function(a.data, a.formula, a.feature.combination, a.
                   data = train.data,
                   hidden = 10,
                   linear.output = FALSE,
-                  threshold = 0.01,
-                  stepmax = 100000000)
+                  threshold = 0.1,
+                  stepmax = 10000)
   
   # predict
   row.predictions <- compute(nn, test.data[,a.feature.combination])$net.result
@@ -51,14 +49,12 @@ neuralNetworkSimpleSplit = function(a.data, a.formula, a.feature.combination, a.
 
 neuralNetworkKFoldsSplit = function(a.data, a.formula, a.feature.combination, a.k) {
   
-  a.data <- a.data[, !colnames(a.data) %in% c("PSS_Score", "C2Stress")]
-  
   # split data
   folds <- kFoldSplit(a.data, a.k)
   
   accuracy.vec <- vector()
   
-  for (i in a.k) {
+  for (i in 1:a.k) {
     oneFold <- folds[[i]]
     
     train.data <- oneFold[[1]]
@@ -72,8 +68,8 @@ neuralNetworkKFoldsSplit = function(a.data, a.formula, a.feature.combination, a.
                     data = train.data,
                     hidden = 10,
                     linear.output = FALSE,
-                    threshold = 0.01,
-                    stepmax = 10000000)
+                    threshold = 0.1,
+                    stepmax = 10000)
     
     # predict
     row.predictions <- compute(nn, test.data[,a.feature.combination])$net.result
@@ -113,7 +109,7 @@ neuralNetwork = function(a.data, a.feature.list, a.num.iter, a.k, a.first.index,
   prediction.acc.kfolds.split <- vector()
   
   best.prediction <- -100000
-  best.formula <- vector
+  best.formula <- vector()
   
   for(i in 1:length(a.feature.list)) {
     
@@ -125,15 +121,18 @@ neuralNetwork = function(a.data, a.feature.list, a.num.iter, a.k, a.first.index,
       
       acc.vec <- vector()
       
+      # run simple split k times
       for(z in 1:a.k) {
         acc <- neuralNetworkSimpleSplit(a.data, f, a.feature.list[[i]], 0.7)
         
         acc.vec[length(acc.vec) + 1] <- acc
       }
-      
+      # store prediction simple split
       prediction.acc.simple.split <- mean(acc.vec)
       
+      # run kfolds 
       acc.kfolds <- neuralNetworkKFoldsSplit(a.data, f, a.feature.list[[i]], a.k)
+      # stor prediction kfolds
       prediction.acc.kfolds.split <- acc.kfolds
       
       meanPred <- (prediction.acc.simple.split[j] + prediction.acc.kfolds.split[j]) / 2
