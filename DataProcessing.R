@@ -143,8 +143,8 @@ for(i in 1:(2*num.datasets)) {
   highModDf <- subset(simple.data, C1Stress != 'lowStress')
 
   # apply rose method
-  lowModDf <- ROSE(C1Stress~., data = lowModDf, N = 100)$data
-  highModDf <- ROSE(C1Stress~., data = highModDf, N = 100)$data
+  lowModDf <- ROSE(C1Stress~., data = lowModDf, N = 120)$data
+  highModDf <- ROSE(C1Stress~., data = highModDf, N = 120)$data
   
   # combine the results
   resultDf <- lowModDf
@@ -167,9 +167,9 @@ for(i in 1:(2*num.datasets)) {
   highModDf$C1Stress <- factor(highModDf$C1Stress)
   
   # apply smote method
-  lowModDf <- SMOTE(C1Stress ~ ., data = lowModDf, perc.over = 350, perc.under=150)
-  highModDf <- SMOTE(C1Stress ~ ., data = highModDf, perc.over = 600, perc.under=150)
-  
+  lowModDf <- SMOTE(C1Stress ~ ., data = lowModDf, perc.over = 280, perc.under=160)
+  highModDf <- SMOTE(C1Stress ~ ., data = highModDf, perc.over = 480, perc.under=200)
+
   # combine the results
   resultDf <- lowModDf
   resultDf <- rbind(resultDf, subset(highModDf, C1Stress == 'highStress'))
