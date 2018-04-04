@@ -37,7 +37,7 @@ MLLogisticRegression(a.datasets.list = datasets.list,
 # Decision Tree
 source("Decision Tree.R")
 MLDecisionTree(a.datasets.list = datasets.list, 
-               a.feature.list = feature.selection.list[1:10], 
+               a.feature.list = feature.selection.list[1:50], 
                a.num.iter = 5, 
                a.k = 5)
 

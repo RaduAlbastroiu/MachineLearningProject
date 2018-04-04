@@ -66,8 +66,8 @@ datasets.list <- list()
 simple.list <- list()
 
 # Using only Smote and Rose datasets
-datasets.list[[1]] <- scaled.smote.datasets
-datasets.list[[2]] <- scaled.rose.datasets
+datasets.list[[1]] <- scaled.rose.datasets
+datasets.list[[2]] <- scaled.smote.datasets
 
 #simple.list[[1]] <- simple.data
 
