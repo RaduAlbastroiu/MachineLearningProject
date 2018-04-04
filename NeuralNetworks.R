@@ -20,7 +20,9 @@ neuralNetworkSimpleSplit = function(a.data, a.formula, a.feature.combination, a.
   nn <- neuralnet(a.formula,
                   data = train.data,
                   hidden = 10,
-                  linear.output = FALSE)
+                  linear.output = FALSE,
+                  threshold = 0.01,
+                  stepmax = 100000000)
   
   # predict
   row.predictions <- compute(nn, test.data[,a.feature.combination])$net.result
@@ -69,7 +71,9 @@ neuralNetworkKFoldsSplit = function(a.data, a.formula, a.feature.combination, a.
     nn <- neuralnet(a.formula,
                     data = train.data,
                     hidden = 10,
-                    linear.output = FALSE)
+                    linear.output = FALSE,
+                    threshold = 0.01,
+                    stepmax = 10000000)
     
     # predict
     row.predictions <- compute(nn, test.data[,a.feature.combination])$net.result
