@@ -16,9 +16,9 @@ source('DataSplitter.R')
 datasetsNames = function(first.index, second.index) {
 
     if(first.index == 1)
-      return('Scaled Rose data')
+      return('Simple data')
     if(first.index == 2)
-      return('Scaled Smote data')
+      return('C1Stress data')
     if(first.index == 3)
       return('Oversampled data')
     if(first.index == 4)
@@ -44,7 +44,7 @@ datasetsNames = function(first.index, second.index) {
     if(first.index == 14)
       return('Normalized Smote data')
     if(first.index == 15)
-      return("Scaled Simple date")
+      return("Scaled Simple data")
     if(first.index == 16)
       return("Scaled C1Stress data")
     if(first.index == 17)
@@ -65,90 +65,88 @@ datasetsNames = function(first.index, second.index) {
 datasets.list <- list()
 simple.list <- list()
 
-# Using only Smote and Rose datasets
-datasets.list[[1]] <- scaled.rose.datasets
-datasets.list[[2]] <- scaled.smote.datasets
+# # Using only Smote and Rose datasets
+# datasets.list[[1]] <- scaled.rose.datasets
+# datasets.list[[2]] <- scaled.smote.datasets
 
-#simple.list[[1]] <- simple.data
+simple.list[[1]] <- simple.data
 
 # add simple data
-#datasets.list[[1]] <- simple.list
+datasets.list[[1]] <- simple.list
 
 
 # add C1Stress modified data
-#c1stress.modified.list <- list()
-#c1stress.modified.list[[1]] <- C1Stress.modified.dataset
-#c1stress.modified.list[[2]] <- normalized.C1Stress.dataset
-#c1stress.modified.list[[3]] <- scaled.C1Stress.dataset
-#datasets.list[[2]] <- c1stress.modified.list
+c1stress.modified.list <- list()
+c1stress.modified.list[[1]] <- C1Stress.modified.dataset
+datasets.list[[2]] <- c1stress.modified.list
 
 
-# add oversampled data
-#datasets.list[[3]] <- oversampled.datasets
+#add oversampled data
+datasets.list[[3]] <- oversampled.datasets
 
 # add undersampled data
-#datasets.list[[4]] <- undersampled.datasets
+datasets.list[[4]] <- undersampled.datasets
 
 # add hybrid data
-#datasets.list[[5]] <- hybrid.datasets
+datasets.list[[5]] <- hybrid.datasets
 
 # add Rose data
-#datasets.list[[6]] <- rose.datasets
+datasets.list[[6]] <- rose.datasets
 
 # add Smote data
-#datasets.list[[7]] <- smote.datasets
+datasets.list[[7]] <- smote.datasets
 
 
 # add normalized data
 
 # add normalized simple data
-#simple.list[[1]] <- normalized.simple.data
-#datasets.list[[8]] <- simple.list
+simple.list[[1]] <- normalized.simple.data
+datasets.list[[8]] <- simple.list
 
 # add normalized C1Stress data
-#simple.list[[1]] <- normalized.C1Stress.dataset
-#datasets.list[[9]] <- simple.list
+simple.list[[1]] <- normalized.C1Stress.dataset
+datasets.list[[9]] <- simple.list
 
 # add normalized oversampled
-#datasets.list[[10]] <- normalized.oversampled.datasets
+datasets.list[[10]] <- normalized.oversampled.datasets
 
 # add normalized undersampled
-#datasets.list[[11]] <- normalized.undersampled.datasets
+datasets.list[[11]] <- normalized.undersampled.datasets
 
 # add normalized hybrid
-#datasets.list[[12]] <- normalized.hybrid.datasets
+datasets.list[[12]] <- normalized.hybrid.datasets
 
 # add normalized rose 
-#datasets.list[[13]] <- normalized.rose.datasets
+datasets.list[[13]] <- normalized.rose.datasets
 
 # add normalized smote
-#datasets.list[[14]] <- normalized.smote.datasets
+datasets.list[[14]] <- normalized.smote.datasets
 
 
 # add scaled data
 
 # add scaled simple data
-#simple.list[[1]] <- scaled.simple.data
-#datasets.list[[15]] <- simple.list
+simple.list[[1]] <- scaled.simple.data
+datasets.list[[15]] <- simple.list
 
 # add scaled C1Stress data
-#simple.list[[1]] <- scaled.simple.data
-#datasets.list[[16]] <- simple.list
+simple.list[[1]] <- scaled.C1Stress.dataset
+datasets.list[[16]] <- simple.list
 
 # add scaled oversampled
-#datasets.list[[17]] <- scaled.oversampled.datasets
+datasets.list[[17]] <- scaled.oversampled.datasets
 
 # add scaled undersampled
-#datasets.list[[18]] <- scaled.undersampled.datasets
+datasets.list[[18]] <- scaled.undersampled.datasets
 
 # add scaled hybrid
-#datasets.list[[19]] <- scaled.hybrid.datasets
+datasets.list[[19]] <- scaled.hybrid.datasets
 
 # add scaled rose
-#datasets.list[[20]] <- scaled.rose.datasets
+datasets.list[[20]] <- scaled.rose.datasets
 
 # add scaled smote
-#datasets.list[[21]] <- scaled.smote.datasets
+datasets.list[[21]] <- scaled.smote.datasets
 
 
 
@@ -159,9 +157,10 @@ for(i in 1:length(datasets.list)) {
 }
 
 rm(i)
-rm(simple.list, c1stress.modified.list)
-#rm(normalized.simple.data, scaled.simple.data)
-#rm(normalized.oversampled.datasets, scaled.oversampled.datasets)
-#rm(normalized.undersampled.datasets, scaled.undersampled.datasets)
-#rm(normalized.hybrid.datasets, scaled.hybrid.datasets)
+rm(simple.list)
+rm(c1stress.modified.list)
+rm(normalized.simple.data, scaled.simple.data)
+rm(normalized.oversampled.datasets, scaled.oversampled.datasets)
+rm(normalized.undersampled.datasets, scaled.undersampled.datasets)
+rm(normalized.hybrid.datasets, scaled.hybrid.datasets)
 

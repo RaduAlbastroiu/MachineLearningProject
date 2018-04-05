@@ -11,7 +11,7 @@ source('FeatureSelection.R')
 # SVM
 source("Support Vector Machines.R")
 MLSVM(a.datasets.list = datasets.list, 
-      a.feature.list = feature.selection.list[1:100], 
+      a.feature.list = feature.selection.list[1:50], 
       a.k = 5)
 
 # KMeans
@@ -37,14 +37,14 @@ MLLogisticRegression(a.datasets.list = datasets.list,
 # Decision Tree
 source("Decision Tree.R")
 MLDecisionTree(a.datasets.list = datasets.list, 
-               a.feature.list = feature.selection.list[1:50], 
+               a.feature.list = feature.selection.list[1:100], 
                a.num.iter = 5, 
                a.k = 5)
 
 # Random Forest
 source("Random Forest.R")
 MLRandomForest(a.datasets.list = datasets.list, 
-               a.feature.list = feature.selection.list[1:20], 
+               a.feature.list = feature.selection.list[1:30], 
                a.num.iter = 5, 
                a.k = 5)
 
