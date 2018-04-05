@@ -4,6 +4,8 @@ library(neuralnet)
 library(nnet)
 library(ggplot2)
 
+# comment line 65 and 66
+# fixInNamespace("calculate.neuralnet", "neuralnet")
 
 neuralNetworkSimpleSplit = function(a.data, a.formula, a.feature.combination, a.split.ratio) {
 
