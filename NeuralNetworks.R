@@ -4,6 +4,7 @@ library(neuralnet)
 library(nnet)
 library(ggplot2)
 
+
 neuralNetworkSimpleSplit = function(a.data, a.formula, a.feature.combination, a.split.ratio) {
 
   # split data
@@ -18,9 +19,12 @@ neuralNetworkSimpleSplit = function(a.data, a.formula, a.feature.combination, a.
   nn <- neuralnet(a.formula,
                   data = train.data,
                   hidden = 10,
-                  linear.output = FALSE,
-                  threshold = 0.1,
-                  stepmax = 10000)
+                  threshold = 0.01,
+                  stepmax = 10000,
+                  startweights = NULL,
+                  act.fct = 'logistic',
+                  algorithm = 'rprop+',
+                  linear.output = FALSE)
   
   # predict
   row.predictions <- compute(nn, test.data[,a.feature.combination])$net.result
@@ -67,9 +71,12 @@ neuralNetworkKFoldsSplit = function(a.data, a.formula, a.feature.combination, a.
     nn <- neuralnet(a.formula,
                     data = train.data,
                     hidden = 10,
-                    linear.output = FALSE,
-                    threshold = 0.1,
-                    stepmax = 10000)
+                    threshold = 0.01,
+                    stepmax = 10000,
+                    startweights = NULL,
+                    act.fct = 'logistic',
+                    algorithm = 'rprop+',
+                    linear.output = FALSE)
     
     # predict
     row.predictions <- compute(nn, test.data[,a.feature.combination])$net.result
@@ -218,3 +225,6 @@ MLNeuralNetwork = function(a.datasets.list, a.feature.list, a.num.iter, a.k) {
   write.csv(Neural.Network.df, file = "NeuralNetworkResults.csv")
   
 }
+
+
+
