@@ -22,7 +22,7 @@ neuralNetworkSimpleSplit = function(a.data, a.formula, a.feature.combination, a.
                   data = train.data,
                   hidden = 10,
                   threshold = 0.01,
-                  stepmax = 10000,
+                  stepmax = 100000,
                   startweights = NULL,
                   act.fct = 'logistic',
                   algorithm = 'rprop+',
@@ -74,7 +74,7 @@ neuralNetworkKFoldsSplit = function(a.data, a.formula, a.feature.combination, a.
                     data = train.data,
                     hidden = 10,
                     threshold = 0.01,
-                    stepmax = 10000,
+                    stepmax = 100000,
                     startweights = NULL,
                     act.fct = 'logistic',
                     algorithm = 'rprop+',
@@ -188,7 +188,7 @@ MLNeuralNetwork = function(a.datasets.list, a.feature.list, a.num.iter, a.k) {
                                    "Formula")
   
   # for in list of datasets
-  for(i in 1:length(a.datasets.list)) {
+  for(i in 20:length(a.datasets.list)) {
     
     datasets <- a.datasets.list[[i]]
     
@@ -224,7 +224,7 @@ MLNeuralNetwork = function(a.datasets.list, a.feature.list, a.num.iter, a.k) {
   }
   
   # output a csv file
-  write.csv(Neural.Network.df, file = "NeuralNetworkResults.csv")
+  write.csv(Neural.Network.df, file = "NeuralNetworkResultsScaled.csv")
   
 }
 

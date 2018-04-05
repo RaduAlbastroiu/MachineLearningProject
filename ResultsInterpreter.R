@@ -15,9 +15,10 @@ avgSVM <- mean(results.dataset$Average.acc[results.dataset$Algorithm == 'SVM'])
 avgRF <- mean(results.dataset$Average.acc[results.dataset$Algorithm == 'RF'])
 avgDT <- mean(results.dataset$Average.acc[results.dataset$Algorithm == 'DT'])
 avgNB <- mean(results.dataset$Average.acc[results.dataset$Algorithm == 'NB'])
+avgNN <- mean(results.dataset$Average.acc[results.dataset$Algorithm == 'NN'])
 
 # plot algorithms on accuracy
-pl.alg.acc.boxplot <- ggplot(data = results.dataset, aes(x = reorder(Algorithm, Average.acc, FUN = median), y = Average.acc)) +
+pl.alg.acc.boxplot <- ggplot(data = results.dataset, aes(x = reorder(Algorithm, Average.acc, FUN = mean), y = Average.acc)) +
   geom_boxplot(aes(fill = Algorithm), alpha = 0.5)
 
 # plot dataset against algorithm with respect to accuracy
@@ -56,7 +57,7 @@ pl.acc.dataset.norm.hist <- ggplot(data = results.dataset.normalized, aes(x = Av
   geom_histogram(aes(fill = Dataset), color = 'black')
 
 # plot simple vs scaled vs normalized data
-pl.norm.boxplot <- ggplot(data = results.dataset.normalized, aes(x = reorder(Dataset, Average.acc, FUN = median), y = Average.acc, fill = Dataset)) + 
+pl.norm.boxplot <- ggplot(data = results.dataset.normalized, aes(x = reorder(Dataset, Average.acc, FUN = mean), y = Average.acc, fill = Dataset)) + 
   geom_boxplot(alpha = 0.5)
 
 
@@ -92,6 +93,15 @@ results.dataset.method$Dataset[regexpr('Rose', results.dataset.method$Dataset) >
 results.dataset.method$Dataset[regexpr('Smote', results.dataset.method$Dataset) > 0] <- 'Smote'
 
 results.dataset.method$Dataset <- as.factor(results.dataset.method$Dataset)
+
+# average acc for each type of data
+avg.acc.simple <- mean(results.dataset.method$Average.acc[results.dataset.method$Dataset == 'Simple'])
+avg.acc.oversampled <- mean(results.dataset.method$Average.acc[results.dataset.method$Dataset == 'Oversampled'])
+avg.acc.undersampled <- mean(results.dataset.method$Average.acc[results.dataset.method$Dataset == 'Undersampled'])
+avg.acc.hybrid <- mean(results.dataset.method$Average.acc[results.dataset.method$Dataset == 'Hybrid'])
+avg.acc.c1Stress <- mean(results.dataset.method$Average.acc[results.dataset.method$Dataset == 'C1Stress'])
+avg.acc.rose <- mean(results.dataset.method$Average.acc[results.dataset.method$Dataset == 'Rose'])
+avg.acc.smote <- mean(results.dataset.method$Average.acc[results.dataset.method$Dataset == 'Smote'])
 }
 
 # plot datasets ignoring simple/norm/scaled labels
