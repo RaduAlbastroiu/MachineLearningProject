@@ -5,16 +5,16 @@
 	Then the running order is this:
 
 	MLManager -> DataManager -> DataReader
-			                        -> DataProcessing
-		   	                        -> DataNormalization (for both scalling and normalisation)
-				            -> DataSplitter
-			   
-	                    -> FeatureSelection -> FeatureSelectionFilter
-				                 -> FeatureSelectionWrapper
-			          		     -> FeatureSelectionEmbedded
+	                         -> DataProcessing
+                                 -> DataNormalization			                             
+                                 -> DataSplitter
+
+	          -> FeatureSelection -> FeatureSelectionFilter
+                  -> FeatureSelectionWrapper
+                  -> FeatureSelectionEmbedded
 
 	Then chose an algorithm from ML Manager to run (let's say SVM):
-			  -> SupportVectorMachines -> MLSVM
+                  -> SupportVectorMachines -> MLSVM
 
 
 	For data and results interpretation:
