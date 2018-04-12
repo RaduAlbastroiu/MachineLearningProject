@@ -33,5 +33,9 @@ all.results <- rbind(all.results, RandomForest.df[c(2, 3, 8, 9)])
 NaiveBayes.df <- read.csv(file = "NaiveBayesResults.csv", header = T)
 all.results <- rbind(all.results, NaiveBayes.df[c(2, 3, 8, 9)])
 
+# add neural networks to results
+RandomForest.df <- read.csv(file = "NeuralNetworksResults.csv", header = T)
+all.results <- rbind(all.results, RandomForest.df[c(2, 3, 8, 9)])
+
 # output a csv file
 write.csv(all.results, file = "AllResults.csv")

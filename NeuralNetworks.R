@@ -224,7 +224,7 @@ MLNeuralNetwork = function(a.datasets.list, a.feature.list, a.num.iter, a.k) {
   }
   
   # output a csv file
-  write.csv(Neural.Network.df, file = "NeuralNetworkResultsScaled.csv")
+  write.csv(Neural.Network.df, file = "NeuralNetworkResults.csv")
   
 }
 

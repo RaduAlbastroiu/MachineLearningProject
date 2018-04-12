@@ -47,9 +47,42 @@ results.dataset.normalized <- results.dataset
   results.dataset.normalized$Dataset <- as.factor(results.dataset.normalized$Dataset)
   
   # average acc for each type of data
-  avg.acc.normalized <- mean(results.dataset.normalized$Average.acc[results.dataset.normalized$Dataset == 'Normalized'])
-  avg.acc.scaled <- mean(results.dataset.normalized$Average.acc[results.dataset.normalized$Dataset == 'Scaled'])
-  avg.acc.simple <- mean(results.dataset.normalized$Average.acc[results.dataset.normalized$Dataset == 'Simple'])
+  # average for each normalized algorithm
+  avg.acc.normalized.SVM <- mean(results.dataset.normalized$Average.acc[results.dataset.normalized$Dataset == 'Normalized' & 
+                                                                      results.dataset.normalized$Algorithm == 'SVM'])
+  avg.acc.normalized.NB <- mean(results.dataset.normalized$Average.acc[results.dataset.normalized$Dataset == 'Normalized' & 
+                                                                      results.dataset.normalized$Algorithm == 'NB'])
+  avg.acc.normalized.NN <- mean(results.dataset.normalized$Average.acc[results.dataset.normalized$Dataset == 'Normalized' & 
+                                                                      results.dataset.normalized$Algorithm == 'NN'])
+  avg.acc.normalized.DT <- mean(results.dataset.normalized$Average.acc[results.dataset.normalized$Dataset == 'Normalized' & 
+                                                                      results.dataset.normalized$Algorithm == 'DT'])
+  avg.acc.normalized.RF <- mean(results.dataset.normalized$Average.acc[results.dataset.normalized$Dataset == 'Normalized' & 
+                                                                      results.dataset.normalized$Algorithm == 'RF'])
+  
+  # average for each scaled algorithm
+  avg.acc.scaled.SVM <- mean(results.dataset.normalized$Average.acc[results.dataset.normalized$Dataset == 'Scaled' & 
+                                                                         results.dataset.normalized$Algorithm == 'SVM'])
+  avg.acc.scaled.NB <- mean(results.dataset.normalized$Average.acc[results.dataset.normalized$Dataset == 'Scaled' & 
+                                                                         results.dataset.normalized$Algorithm == 'NB'])
+  avg.acc.scaled.NN <- mean(results.dataset.normalized$Average.acc[results.dataset.normalized$Dataset == 'Scaled' & 
+                                                                         results.dataset.normalized$Algorithm == 'NN'])
+  avg.acc.scaled.DT <- mean(results.dataset.normalized$Average.acc[results.dataset.normalized$Dataset == 'Scaled' & 
+                                                                         results.dataset.normalized$Algorithm == 'DT'])
+  avg.acc.scaled.RF <- mean(results.dataset.normalized$Average.acc[results.dataset.normalized$Dataset == 'Scaled' & 
+                                                                         results.dataset.normalized$Algorithm == 'RF'])
+  
+  # average for each scaled algorithm
+  avg.acc.simple.SVM <- mean(results.dataset.normalized$Average.acc[results.dataset.normalized$Dataset == 'Simple' & 
+                                                                      results.dataset.normalized$Algorithm == 'SVM'])
+  avg.acc.simple.NB <- mean(results.dataset.normalized$Average.acc[results.dataset.normalized$Dataset == 'Simple' & 
+                                                                     results.dataset.normalized$Algorithm == 'NB'])
+  avg.acc.simple.NN <- mean(results.dataset.normalized$Average.acc[results.dataset.normalized$Dataset == 'Simple' & 
+                                                                     results.dataset.normalized$Algorithm == 'NN'])
+  avg.acc.simple.DT <- mean(results.dataset.normalized$Average.acc[results.dataset.normalized$Dataset == 'Simple' & 
+                                                                     results.dataset.normalized$Algorithm == 'DT'])
+  avg.acc.simple.RF <- mean(results.dataset.normalized$Average.acc[results.dataset.normalized$Dataset == 'Simple' & 
+                                                                     results.dataset.normalized$Algorithm == 'RF'])
+  
 }
 
 # plot all datasets colored by simple vs scaled vs normalized
